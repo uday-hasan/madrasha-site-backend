@@ -1,0 +1,5 @@
+#!/bin/sh
+# Validates commit message format using commitlint
+# Valid: "feat: add login endpoint"
+# Invalid: "added login" (no type prefix)
+npx --no -- commitlint --edit "$1"

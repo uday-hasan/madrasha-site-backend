@@ -1,0 +1,4 @@
+#!/bin/sh
+# Runs lint-staged before every commit
+# lint-staged runs ESLint + Prettier only on staged files (fast)
+npx lint-staged

@@ -1,0 +1,25 @@
+[Unit]
+Description=Madrasha Backend API - Staging
+After=network.target
+
+[Service]
+WorkingDirectory=/var/www/api-staging
+ExecStart=/root/.bun/bin/bun run start
+Restart=always
+RestartSec=5
+
+# Environment
+Environment=NODE_ENV=staging
+Environment=PORT=5001
+
+# Load environment variables from file
+EnvironmentFile=/var/www/api-staging/.env
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/var/www/api-staging
+ReadWritePaths=/var/www/api-staging/logs
+
+[Install]
+WantedBy=multi-user.target

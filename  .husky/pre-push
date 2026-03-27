@@ -1,0 +1,5 @@
+#!/bin/sh
+# Runs tests before every push
+# Prevents pushing broken code to remote
+echo "Running tests before push..."
+npm run test
