@@ -25,9 +25,6 @@ Thumbs.db
 # Test coverage
 coverage/
 
-# Prisma
-prisma/migrations/
-
 # Misc
 *.tsbuildinfo
 
