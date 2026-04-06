@@ -19,6 +19,11 @@ enum Role {
     USER
 }
 
+enum MediaType {
+    IMAGE
+    VIDEO
+}
+
 // ================================
 // MODELS
 // ================================
@@ -33,6 +38,9 @@ model User {
 
     // Refresh tokens (one user can have multiple sessions)
     refreshTokens RefreshToken[]
+
+    // Galleries uploaded by this user
+    galleries Gallery[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -49,4 +57,47 @@ model RefreshToken {
     createdAt DateTime @default(now())
 
     @@map("refresh_tokens")
+}
+
+model Gallery {
+    id          String    @id @default(cuid())
+    title       String
+    description String?
+    imageUrl    String?
+    videoUrl    String?
+    mediaType   MediaType @default(IMAGE)
+    category    String    @default("general")
+    featured    Boolean   @default(false)
+    uploadedBy  String?
+    uploader    User?     @relation(fields: [uploadedBy], references: [id], onDelete: SetNull)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("galleries")
+}
+
+model Notice {
+    id       String  @id @default(cuid())
+    title    String
+    content  String
+    category String  @default("general")
+    featured Boolean @default(false)
+    slug     String  @unique
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("notices")
+}
+
+model HomePage {
+    id         String @id @default(cuid())
+    heroSlides Json   @default("[]")
+    stats      Json   @default("[]")
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("home_pages")
 }

@@ -37,7 +37,10 @@ export const validateRequest = (schema: RequestSchema) => {
         req.params = await schema.params.parseAsync(req.params);
       }
       if (schema.query) {
-        req.query = await schema.query.parseAsync(req.query);
+        const parsed = await schema.query.parseAsync(req.query);
+        // Express 5 makes req.query a getter — mutate the object in-place
+        // instead of trying to replace the property reference.
+        Object.assign(req.query, parsed);
       }
 
       next();

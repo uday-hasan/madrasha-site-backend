@@ -9,7 +9,7 @@ import { z } from "zod";
 
 const envSchema = z.object({
   NODE_ENV: z
-    .enum(["development", "staging", "production"])
+    .enum(["development", "staging", "production", "test"])
     .default("development"),
   PORT: z.string().default("5000").transform(Number),
   API_VERSION: z.string().default("v1"),
@@ -38,6 +38,10 @@ const envSchema = z.object({
   // Rate limiting
   RATE_LIMIT_MAX: z.string().default("100").transform(Number),
   RATE_LIMIT_WINDOW_MS: z.string().default("15").transform(Number),
+
+  // File uploads
+  UPLOAD_DIR: z.string().default("./uploads"),
+  UPLOAD_LIMIT: z.string().default("52428800").transform(Number), // 50MB default
 });
 
 // Parse and validate env variables
@@ -55,3 +59,4 @@ export const env = parsedEnv.data;
 export const isDevelopment = env.NODE_ENV === "development";
 export const isProduction = env.NODE_ENV === "production";
 export const isStaging = env.NODE_ENV === "staging";
+export const isTest = env.NODE_ENV === "test";
