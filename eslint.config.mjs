@@ -5,6 +5,9 @@ export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    ignores: ['dist/**', 'node_modules/**', '*.config.*'],
+  },
+  {
     rules: {
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/explicit-function-return-type': 'off',
@@ -22,16 +25,11 @@ export default tseslint.config(
     },
   },
   {
-    ignores: ['dist/**', 'node_modules/**', '*.config.*'],
-    overrides: [
-      {
-        files: ['**/*.test.ts'],
-        languageOptions: {
-          parserOptions: {
-            project: './tsconfig.test.json',
-          },
-        },
+    files: ['**/*.test.ts'],
+    languageOptions: {
+      parserOptions: {
+        project: './tsconfig.test.json',
       },
-    ],
+    },
   },
 );

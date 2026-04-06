@@ -4,6 +4,7 @@ import cors from 'cors';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
+import path from 'path';
 import swaggerUi from 'swagger-ui-express';
 
 import { env, isDevelopment } from './config/env';
@@ -91,6 +92,12 @@ app.get('/health', (_req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+// ================================
+// STATIC FILES
+// Serve uploaded files from the uploads directory
+// ================================
+app.use('/uploads', express.static(path.resolve(env.UPLOAD_DIR)));
 
 // ================================
 // API DOCS (Swagger)

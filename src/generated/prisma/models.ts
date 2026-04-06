@@ -10,4 +10,7 @@
  */
 export type * from './models/User'
 export type * from './models/RefreshToken'
+export type * from './models/Gallery'
+export type * from './models/Notice'
+export type * from './models/HomePage'
 export type * from './commonInputTypes'
