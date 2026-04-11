@@ -19,7 +19,6 @@ import router from './routes';
 // Separated from server.ts so we can import it in tests
 // without starting the actual server.
 // ================================
-// ================================
 
 const app = express();
 
