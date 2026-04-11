@@ -200,7 +200,7 @@ export type GalleryGroupByOutputType = {
   _max: GalleryMaxAggregateOutputType | null
 }
 
-export type GetGalleryGroupByPayload<T extends GalleryGroupByArgs> = Prisma.PrismaPromise<
+type GetGalleryGroupByPayload<T extends GalleryGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<GalleryGroupByOutputType, T['by']> &
       {

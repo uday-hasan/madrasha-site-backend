@@ -150,7 +150,7 @@ export type HomePageGroupByOutputType = {
   _max: HomePageMaxAggregateOutputType | null
 }
 
-export type GetHomePageGroupByPayload<T extends HomePageGroupByArgs> = Prisma.PrismaPromise<
+type GetHomePageGroupByPayload<T extends HomePageGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<HomePageGroupByOutputType, T['by']> &
       {

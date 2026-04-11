@@ -29,7 +29,14 @@ const app = express();
 
 // helmet — sets ~15 security-related HTTP headers automatically
 // (Content-Security-Policy, X-Frame-Options, etc.)
-app.use(helmet());
+app.use(
+  helmet({
+    // Allow images to be loaded from your backend to your frontend
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+    // Only if you are using Swagger or loading external scripts
+    contentSecurityPolicy: isDevelopment ? false : undefined,
+  }),
+);
 
 // cors — controls which origins can call our API
 app.use(
@@ -97,7 +104,9 @@ app.get('/health', (_req, res) => {
 // STATIC FILES
 // Serve uploaded files from the uploads directory
 // ================================
-app.use('/uploads', express.static(path.resolve(env.UPLOAD_DIR)));
+const uploadsPath = path.join(process.cwd(), 'uploads');
+app.use('/uploads', express.static(uploadsPath));
+// app.use('/uploads', express.static(path.resolve(env.UPLOAD_DIR)));
 
 // ================================
 // API DOCS (Swagger)

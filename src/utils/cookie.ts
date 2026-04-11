@@ -1,5 +1,5 @@
-import { Response } from "express";
-import { env, isProduction } from "../config/env";
+import { Response } from 'express';
+import { env, isProduction } from '../config/env';
 
 // ================================
 // COOKIE UTILITIES
@@ -16,13 +16,13 @@ import { env, isProduction } from "../config/env";
 const COOKIE_OPTIONS = {
   httpOnly: true, // Not accessible via JavaScript
   secure: isProduction, // HTTPS only in production
-  sameSite: "lax" as const, // Protect against CSRF
-  path: "/",
+  sameSite: 'lax' as const, // Protect against CSRF
+  path: '/',
 };
 
 // Set the access token cookie (short-lived)
 export const setAccessTokenCookie = (res: Response, token: string): void => {
-  res.cookie("accessToken", token, {
+  res.cookie('accessToken', token, {
     ...COOKIE_OPTIONS,
     maxAge: parseToMilliseconds(env.JWT_ACCESS_EXPIRES_IN), // e.g. 15 minutes
   });
@@ -30,17 +30,17 @@ export const setAccessTokenCookie = (res: Response, token: string): void => {
 
 // Set the refresh token cookie (long-lived)
 export const setRefreshTokenCookie = (res: Response, token: string): void => {
-  res.cookie("refreshToken", token, {
+  res.cookie('refreshToken', token, {
     ...COOKIE_OPTIONS,
     maxAge: parseToMilliseconds(env.JWT_REFRESH_EXPIRES_IN), // e.g. 7 days
-    path: "/api/v1/auth", // Refresh token only sent to /auth routes
+    path: '/', // Refresh token only sent to /auth routes
   });
 };
 
 // Clear both auth cookies (used on logout)
 export const clearAuthCookies = (res: Response): void => {
-  res.clearCookie("accessToken", { path: "/" });
-  res.clearCookie("refreshToken", { path: "/api/v1/auth" });
+  res.clearCookie('accessToken', { path: '/' });
+  res.clearCookie('refreshToken', { path: '/' });
 };
 
 // Convert duration string to milliseconds
@@ -56,5 +56,5 @@ const parseToMilliseconds = (duration: string): number => {
     s: 1000,
   };
 
-  return value * (ms[unit] ?? ms["m"]);
+  return value * (ms[unit] ?? ms['m']);
 };
