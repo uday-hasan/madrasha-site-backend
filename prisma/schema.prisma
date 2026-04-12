@@ -78,12 +78,16 @@ model Gallery {
 }
 
 model Notice {
-    id       String  @id @default(cuid())
-    title    String
-    content  String
-    category String  @default("general")
-    featured Boolean @default(false)
-    slug     String  @unique
+    id            String   @id @default(cuid())
+    title         String
+    content       String   @db.Text
+    excerpt       String?  @db.Text
+    category      String   @default("general")
+    featured      Boolean  @default(false)
+    isActive      Boolean  @default(true)
+    isImportant   Boolean  @default(false)
+    attachmentUrl String?
+    slug          String   @unique
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -92,12 +96,50 @@ model Notice {
 }
 
 model HomePage {
-    id         String @id @default(cuid())
-    heroSlides Json   @default("[]")
-    stats      Json   @default("[]")
+    id                  String @id @default(cuid())
+    heroSlides          Json   @default("[]")
+    stats               Json   @default("[]")
+    bannerImage         String?
+    marqueeText         String? @db.Text
+    aboutSummary        String? @db.Text
+    featuredNoticesLimit Int    @default(3)
+    galleryPreviewLimit  Int    @default(3)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     @@map("home_pages")
+}
+
+model Department {
+    id            String   @id @default(cuid())
+    name          String
+    slug          String   @unique
+    description   String   @db.Text
+    duration      String
+    subjects      String[] @default([])
+    headTeacher   String?
+    totalStudents Int      @default(0)
+    imageUrl      String?
+    isActive      Boolean  @default(true)
+    displayOrder  Int      @default(0)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("departments")
+}
+
+model SiteSettings {
+    id              String   @id @default(cuid())
+    key             String   @unique
+    value           String   @db.Text
+    category        String   @default("general")
+    description     String?
+    isPublic        Boolean  @default(true)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("site_settings")
 }

@@ -42,3 +42,13 @@ export type Notice = Prisma.NoticeModel
  * 
  */
 export type HomePage = Prisma.HomePageModel
+/**
+ * Model Department
+ * 
+ */
+export type Department = Prisma.DepartmentModel
+/**
+ * Model SiteSettings
+ * 
+ */
+export type SiteSettings = Prisma.SiteSettingsModel

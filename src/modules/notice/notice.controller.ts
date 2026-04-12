@@ -32,6 +32,40 @@ export const noticeController = {
     });
   }),
 
+  // GET /notices/important
+  getImportant: catchAsync(async (_req: Request, res: Response): Promise<void> => {
+    const notices = await noticeService.getImportantNotices();
+
+    sendResponse(res, {
+      statusCode: 200,
+      message: 'Important notices fetched successfully',
+      data: notices,
+    });
+  }),
+
+  // GET /notices/active
+  getActive: catchAsync(async (req: Request, res: Response): Promise<void> => {
+    const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 10;
+    const notices = await noticeService.getActiveNotices(limit);
+
+    sendResponse(res, {
+      statusCode: 200,
+      message: 'Active notices fetched successfully',
+      data: notices,
+    });
+  }),
+
+  // GET /notices/slug/:slug
+  getBySlug: catchAsync(async (req: Request, res: Response): Promise<void> => {
+    const notice = await noticeService.getNoticeBySlug(req.params.slug as string);
+
+    sendResponse(res, {
+      statusCode: 200,
+      message: 'Notice fetched successfully',
+      data: notice,
+    });
+  }),
+
   // GET /notices/:id
   getById: catchAsync(async (req: Request, res: Response): Promise<void> => {
     const notice = await noticeService.getNoticeById(req.params.id as string);

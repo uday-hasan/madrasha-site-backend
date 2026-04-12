@@ -11,11 +11,13 @@ import type { CreateNoticeInput, UpdateNoticeInput, NoticeQuery } from './notice
 export const noticeService = {
   // ---- GET ALL ----
   async getAllNotices(query: NoticeQuery) {
-    const { page, limit, featured, category, search } = query;
+    const { page, limit, featured, isActive, isImportant, category, search } = query;
     const { skip, take } = getPaginationParams(page, limit);
 
     const where = {
       ...(featured !== undefined && { featured }),
+      ...(isActive !== undefined && { isActive }),
+      ...(isImportant !== undefined && { isImportant }),
       ...(category && { category }),
       ...(search && {
         OR: [
@@ -49,9 +51,39 @@ export const noticeService = {
   // ---- GET FEATURED (for home marquee) ----
   async getFeaturedNotices() {
     return prisma.notice.findMany({
-      where: { featured: true },
+      where: { featured: true, isActive: true },
       orderBy: { createdAt: 'desc' },
       take: 20,
+    });
+  },
+
+  // ---- GET IMPORTANT (for marquee notice) ----
+  async getImportantNotices() {
+    return prisma.notice.findMany({
+      where: { isImportant: true, isActive: true },
+      orderBy: { createdAt: 'desc' },
+      take: 10,
+    });
+  },
+
+  // ---- GET ACTIVE (for public pages) ----
+  async getActiveNotices(limit: number = 10) {
+    return prisma.notice.findMany({
+      where: { isActive: true },
+      orderBy: { createdAt: 'desc' },
+      take: limit,
+      select: {
+        id: true,
+        title: true,
+        excerpt: true,
+        content: true,
+        category: true,
+        featured: true,
+        isImportant: true,
+        slug: true,
+        attachmentUrl: true,
+        createdAt: true,
+      },
     });
   },
 
@@ -66,9 +98,30 @@ export const noticeService = {
     return notice;
   },
 
+  // ---- GET BY SLUG ----
+  async getNoticeBySlug(slug: string) {
+    const notice = await prisma.notice.findUnique({ where: { slug } });
+
+    if (!notice) {
+      throw new AppError('Notice not found', 404);
+    }
+
+    return notice;
+  },
+
   // ---- CREATE ----
   async createNotice(data: CreateNoticeInput) {
-    const { title, content, category, featured, slug } = data;
+    const {
+      title,
+      content,
+      excerpt,
+      category,
+      featured,
+      isActive,
+      isImportant,
+      attachmentUrl,
+      slug,
+    } = data;
 
     // Generate slug if not provided
     let finalSlug = slug ? slugify(slug) : generateUniqueSlug(title);
@@ -83,8 +136,12 @@ export const noticeService = {
       data: {
         title,
         content,
+        excerpt,
         category: category ?? 'general',
         featured: featured ?? false,
+        isActive: isActive ?? true,
+        isImportant: isImportant ?? false,
+        attachmentUrl,
         slug: finalSlug,
       },
     });
@@ -116,8 +173,12 @@ export const noticeService = {
       data: {
         ...(data.title !== undefined && { title: data.title }),
         ...(data.content !== undefined && { content: data.content }),
+        ...(data.excerpt !== undefined && { excerpt: data.excerpt }),
         ...(data.category !== undefined && { category: data.category }),
         ...(data.featured !== undefined && { featured: data.featured }),
+        ...(data.isActive !== undefined && { isActive: data.isActive }),
+        ...(data.isImportant !== undefined && { isImportant: data.isImportant }),
+        ...(data.attachmentUrl !== undefined && { attachmentUrl: data.attachmentUrl }),
         slug: finalSlug,
       },
     });

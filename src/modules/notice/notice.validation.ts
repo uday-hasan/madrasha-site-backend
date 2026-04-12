@@ -17,9 +17,17 @@ export const createNoticeSchema = {
       .min(10, 'Content must be at least 10 characters')
       .trim(),
 
+    excerpt: z.string().max(500, 'Excerpt must be less than 500 characters').trim().optional(),
+
     category: z.string().min(1).max(100).trim().default('general'),
 
     featured: z.boolean().default(false),
+
+    isActive: z.boolean().default(true),
+
+    isImportant: z.boolean().default(false),
+
+    attachmentUrl: z.string().url('Invalid attachment URL').optional(),
 
     slug: z.string().min(2).max(300).trim().optional(),
   }),
@@ -27,22 +35,21 @@ export const createNoticeSchema = {
 
 export const updateNoticeSchema = {
   body: z.object({
-    title: z
-      .string()
-      .min(2, 'Title must be at least 2 characters')
-      .max(300)
-      .trim()
-      .optional(),
+    title: z.string().min(2, 'Title must be at least 2 characters').max(300).trim().optional(),
 
-    content: z
-      .string()
-      .min(10, 'Content must be at least 10 characters')
-      .trim()
-      .optional(),
+    content: z.string().min(10, 'Content must be at least 10 characters').trim().optional(),
+
+    excerpt: z.string().max(500).trim().optional(),
 
     category: z.string().min(1).max(100).trim().optional(),
 
     featured: z.boolean().optional(),
+
+    isActive: z.boolean().optional(),
+
+    isImportant: z.boolean().optional(),
+
+    attachmentUrl: z.string().url('Invalid attachment URL').optional(),
 
     slug: z.string().min(2).max(300).trim().optional(),
   }),
@@ -69,6 +76,22 @@ export const noticeQuerySchema = {
       .optional()
       .transform((val) => (val ? parseInt(val, 10) : 10)),
     featured: z
+      .string()
+      .optional()
+      .transform((val) => {
+        if (val === 'true') return true;
+        if (val === 'false') return false;
+        return undefined;
+      }),
+    isActive: z
+      .string()
+      .optional()
+      .transform((val) => {
+        if (val === 'true') return true;
+        if (val === 'false') return false;
+        return undefined;
+      }),
+    isImportant: z
       .string()
       .optional()
       .transform((val) => {

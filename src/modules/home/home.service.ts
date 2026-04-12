@@ -7,7 +7,7 @@ import type { UpdateHomeInput } from './home.validation';
 
 export const homeService = {
   // ---- GET HOME PAGE DATA ----
-  // Returns heroSlides, stats, featured notices, and featured gallery items.
+  // Returns heroSlides, stats, featured notices, latest notices, and gallery items.
   async getHomeData() {
     // Get (or create) the singleton HomePage record
     let homePage = await prisma.homePage.findFirst({
@@ -23,19 +23,30 @@ export const homeService = {
       });
     }
 
-    // Fetch featured notices for the marquee
+    // Fetch featured notices for the home page news section
+    const featuredNoticesLimit = homePage.featuredNoticesLimit || 3;
     const featuredNotices = await prisma.notice.findMany({
-      where: { featured: true },
+      where: { featured: true, isActive: true },
       orderBy: { createdAt: 'desc' },
-      take: 20,
-      select: { id: true, title: true, slug: true, createdAt: true },
+      take: featuredNoticesLimit,
+      select: {
+        id: true,
+        title: true,
+        excerpt: true,
+        content: true,
+        category: true,
+        slug: true,
+        attachmentUrl: true,
+        createdAt: true,
+      },
     });
 
-    // Fetch featured gallery items
-    const featuredGallery = await prisma.gallery.findMany({
-      where: { featured: true },
+    // Fetch latest gallery items for preview
+    const galleryPreviewLimit = homePage.galleryPreviewLimit || 3;
+    const latestGallery = await prisma.gallery.findMany({
+      where: { mediaType: 'IMAGE' },
       orderBy: { createdAt: 'desc' },
-      take: 12,
+      take: galleryPreviewLimit,
       select: {
         id: true,
         title: true,
@@ -43,14 +54,28 @@ export const homeService = {
         videoUrl: true,
         mediaType: true,
         category: true,
+        description: true,
       },
+    });
+
+    // Fetch active departments
+    const activeDepartments = await prisma.department.findMany({
+      where: { isActive: true },
+      orderBy: [{ displayOrder: 'asc' }, { createdAt: 'desc' }],
+      take: 4,
     });
 
     return {
       heroSlides: homePage.heroSlides,
       stats: homePage.stats,
+      bannerImage: homePage.bannerImage,
+      marqueeText: homePage.marqueeText,
+      aboutSummary: homePage.aboutSummary,
+      featuredNoticesLimit: homePage.featuredNoticesLimit,
+      galleryPreviewLimit: homePage.galleryPreviewLimit,
       featuredNotices,
-      featuredGallery,
+      latestGallery,
+      activeDepartments,
     };
   },
 
@@ -61,13 +86,24 @@ export const homeService = {
       orderBy: { createdAt: 'desc' },
     });
 
+    const updateData: any = {
+      ...(data.heroSlides !== undefined && { heroSlides: data.heroSlides }),
+      ...(data.stats !== undefined && { stats: data.stats }),
+      ...(data.bannerImage !== undefined && { bannerImage: data.bannerImage }),
+      ...(data.marqueeText !== undefined && { marqueeText: data.marqueeText }),
+      ...(data.aboutSummary !== undefined && { aboutSummary: data.aboutSummary }),
+      ...(data.featuredNoticesLimit !== undefined && {
+        featuredNoticesLimit: data.featuredNoticesLimit,
+      }),
+      ...(data.galleryPreviewLimit !== undefined && {
+        galleryPreviewLimit: data.galleryPreviewLimit,
+      }),
+    };
+
     if (existing) {
       return prisma.homePage.update({
         where: { id: existing.id },
-        data: {
-          ...(data.heroSlides !== undefined && { heroSlides: data.heroSlides }),
-          ...(data.stats !== undefined && { stats: data.stats }),
-        },
+        data: updateData,
       });
     }
 
@@ -75,6 +111,11 @@ export const homeService = {
       data: {
         heroSlides: data.heroSlides ?? [],
         stats: data.stats ?? [],
+        bannerImage: data.bannerImage,
+        marqueeText: data.marqueeText,
+        aboutSummary: data.aboutSummary,
+        featuredNoticesLimit: data.featuredNoticesLimit ?? 3,
+        galleryPreviewLimit: data.galleryPreviewLimit ?? 3,
       },
     });
   },

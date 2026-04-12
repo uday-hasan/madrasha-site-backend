@@ -61,6 +61,53 @@ router.get('/featured', noticeController.getFeatured);
 
 /**
  * @swagger
+ * /notices/important:
+ *   get:
+ *     summary: Get important notices (for marquee)
+ *     tags: [Notices]
+ *     responses:
+ *       200:
+ *         description: List of important notices
+ */
+router.get('/important', noticeController.getImportant);
+
+/**
+ * @swagger
+ * /notices/active:
+ *   get:
+ *     summary: Get active notices (public)
+ *     tags: [Notices]
+ *     parameters:
+ *       - in: query
+ *         name: limit
+ *         schema: { type: integer }
+ *     responses:
+ *       200:
+ *         description: List of active notices
+ */
+router.get('/active', noticeController.getActive);
+
+/**
+ * @swagger
+ * /notices/slug/{slug}:
+ *   get:
+ *     summary: Get notice by slug
+ *     tags: [Notices]
+ *     parameters:
+ *       - in: path
+ *         name: slug
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: Notice data
+ *       404:
+ *         description: Not found
+ */
+router.get('/slug/:slug', noticeController.getBySlug);
+
+/**
+ * @swagger
  * /notices/{id}:
  *   get:
  *     summary: Get notice by ID
@@ -98,10 +145,18 @@ router.get('/:id', validateRequest(noticeIdParamSchema), noticeController.getByI
  *                 type: string
  *               content:
  *                 type: string
+ *               excerpt:
+ *                 type: string
  *               category:
  *                 type: string
  *               featured:
  *                 type: boolean
+ *               isActive:
+ *                 type: boolean
+ *               isImportant:
+ *                 type: boolean
+ *               attachmentUrl:
+ *                 type: string
  *               slug:
  *                 type: string
  *     responses:

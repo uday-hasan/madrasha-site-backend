@@ -55,7 +55,9 @@ export const ModelName = {
   RefreshToken: 'RefreshToken',
   Gallery: 'Gallery',
   Notice: 'Notice',
-  HomePage: 'HomePage'
+  HomePage: 'HomePage',
+  Department: 'Department',
+  SiteSettings: 'SiteSettings'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -120,8 +122,12 @@ export const NoticeScalarFieldEnum = {
   id: 'id',
   title: 'title',
   content: 'content',
+  excerpt: 'excerpt',
   category: 'category',
   featured: 'featured',
+  isActive: 'isActive',
+  isImportant: 'isImportant',
+  attachmentUrl: 'attachmentUrl',
   slug: 'slug',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -134,11 +140,49 @@ export const HomePageScalarFieldEnum = {
   id: 'id',
   heroSlides: 'heroSlides',
   stats: 'stats',
+  bannerImage: 'bannerImage',
+  marqueeText: 'marqueeText',
+  aboutSummary: 'aboutSummary',
+  featuredNoticesLimit: 'featuredNoticesLimit',
+  galleryPreviewLimit: 'galleryPreviewLimit',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type HomePageScalarFieldEnum = (typeof HomePageScalarFieldEnum)[keyof typeof HomePageScalarFieldEnum]
+
+
+export const DepartmentScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  description: 'description',
+  duration: 'duration',
+  subjects: 'subjects',
+  headTeacher: 'headTeacher',
+  totalStudents: 'totalStudents',
+  imageUrl: 'imageUrl',
+  isActive: 'isActive',
+  displayOrder: 'displayOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DepartmentScalarFieldEnum = (typeof DepartmentScalarFieldEnum)[keyof typeof DepartmentScalarFieldEnum]
+
+
+export const SiteSettingsScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  value: 'value',
+  category: 'category',
+  description: 'description',
+  isPublic: 'isPublic',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SiteSettingsScalarFieldEnum = (typeof SiteSettingsScalarFieldEnum)[keyof typeof SiteSettingsScalarFieldEnum]
 
 
 export const SortOrder = {
