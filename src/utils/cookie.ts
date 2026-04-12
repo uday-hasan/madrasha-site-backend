@@ -3,16 +3,18 @@ import { env, isProduction, isStaging } from '../config/env';
 
 const isSecure = isProduction || isStaging;
 
-// const getCookieDomain = () => {
-//   if (isProduction) return '.madrasadarularqam.org';
-//   if (isStaging) return '.staging.madrasadarularqam.org';
-//   return undefined;
-// };
+const getCookieDomain = () => {
+  if (isProduction) return '.madrasadarularqam.org';
+  if (isStaging) return '.madrasadarularqam.org';
+  return undefined;
+};
+
 const BASE_COOKIE_OPTIONS = {
   httpOnly: true,
   secure: isSecure,
   sameSite: isSecure ? ('none' as const) : ('lax' as const),
   path: '/',
+  domain: getCookieDomain(),
 };
 
 export const setAccessTokenCookie = (res: Response, token: string): void => {
@@ -30,8 +32,9 @@ export const setRefreshTokenCookie = (res: Response, token: string): void => {
 };
 
 export const clearAuthCookies = (res: Response): void => {
-  res.clearCookie('accessToken', { path: '/' });
-  res.clearCookie('refreshToken', { path: '/' });
+  const domain = getCookieDomain();
+  res.clearCookie('accessToken', { path: '/', domain });
+  res.clearCookie('refreshToken', { path: '/', domain });
 };
 
 const parseToMilliseconds = (duration: string): number => {

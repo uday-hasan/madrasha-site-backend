@@ -22,6 +22,9 @@ import router from './routes';
 
 const app = express();
 
+// Trust proxy - REQUIRED for secure cookies behind reverse proxy (Nginx)
+app.set('trust proxy', 1);
+
 // ================================
 // SECURITY MIDDLEWARES
 // Applied first, before any routes
