@@ -28,17 +28,14 @@ export const createGallerySchema = {
       .transform((val) => val === 'true'),
 
     videoUrl: z.string().url('Invalid video URL').optional(),
+
+    imageUrl: z.string().url('Invalid image URL').optional(),
   }),
 };
 
 export const updateGallerySchema = {
   body: z.object({
-    title: z
-      .string()
-      .min(2, 'Title must be at least 2 characters')
-      .max(200)
-      .trim()
-      .optional(),
+    title: z.string().min(2, 'Title must be at least 2 characters').max(200).trim().optional(),
 
     description: z.string().max(1000).trim().optional(),
 
@@ -57,6 +54,8 @@ export const updateGallerySchema = {
       }),
 
     videoUrl: z.string().url('Invalid video URL').optional(),
+
+    imageUrl: z.string().url('Invalid image URL').optional(),
   }),
 
   params: z.object({

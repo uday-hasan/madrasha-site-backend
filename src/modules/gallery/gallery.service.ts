@@ -64,27 +64,34 @@ export const galleryService = {
   },
 
   // ---- CREATE ----
-  async createGallery(
-    data: CreateGalleryInput,
-    userId: string,
-    file?: Express.Multer.File,
-  ) {
-    const { title, description, mediaType, category, featured, videoUrl } = data;
+  async createGallery(data: CreateGalleryInput, userId: string, file?: Express.Multer.File) {
+    const {
+      title,
+      description,
+      mediaType,
+      category,
+      featured,
+      videoUrl,
+      imageUrl: inputImageUrl,
+    } = data;
 
-    // For IMAGE type, a file must be provided (unless videoUrl given)
     let imageUrl: string | undefined;
     let finalVideoUrl: string | undefined;
 
     if (mediaType === 'VIDEO' && videoUrl) {
       finalVideoUrl = videoUrl;
+    } else if (mediaType === 'IMAGE' && inputImageUrl) {
+      imageUrl = inputImageUrl;
     } else if (file) {
       if (mediaType === 'VIDEO') {
         finalVideoUrl = `/uploads/videos/${file.filename}`;
       } else {
         imageUrl = `/uploads/images/${file.filename}`;
       }
+    } else if (mediaType === 'VIDEO') {
+      throw new AppError('Either a video file or videoUrl is required for VIDEO type', 400);
     } else if (mediaType === 'IMAGE') {
-      throw new AppError('An image file is required for IMAGE type gallery items', 400);
+      throw new AppError('Either an image file or imageUrl is required for IMAGE type', 400);
     }
 
     const gallery = await prisma.gallery.create({
@@ -107,17 +114,13 @@ export const galleryService = {
   },
 
   // ---- UPDATE ----
-  async updateGallery(
-    id: string,
-    data: UpdateGalleryInput,
-    file?: Express.Multer.File,
-  ) {
+  async updateGallery(id: string, data: UpdateGalleryInput, file?: Express.Multer.File) {
     const existing = await prisma.gallery.findUnique({ where: { id } });
     if (!existing) {
       throw new AppError('Gallery item not found', 404);
     }
 
-    let imageUrl = existing.imageUrl ?? undefined;
+    let imageUrl = data.imageUrl ?? existing.imageUrl ?? undefined;
     let videoUrl = data.videoUrl ?? existing.videoUrl ?? undefined;
 
     // If a new file is uploaded, delete the old one and update the path
@@ -128,7 +131,7 @@ export const galleryService = {
         }
         videoUrl = `/uploads/videos/${file.filename}`;
       } else {
-        if (existing.imageUrl) {
+        if (existing.imageUrl && !existing.imageUrl.startsWith('http')) {
           deleteFile(urlToFilePath(existing.imageUrl));
         }
         imageUrl = `/uploads/images/${file.filename}`;
