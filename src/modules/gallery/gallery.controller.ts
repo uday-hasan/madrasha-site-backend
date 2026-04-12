@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { galleryService } from './gallery.service';
 import { catchAsync } from '../../utils/catchAsync';
 import { sendResponse } from '../../utils/sendResponse';
+import { AppError } from '../../utils/AppError';
 import type { CreateGalleryInput, UpdateGalleryInput, GalleryQuery } from './gallery.validation';
 
 // ================================
@@ -34,6 +35,20 @@ export const galleryController = {
 
   // POST /gallery
   create: catchAsync(async (req: Request, res: Response): Promise<void> => {
+    // Validate file size based on media type
+    if (req.file) {
+      const isVideo = req.file.mimetype.startsWith('video/');
+      const maxSize = isVideo ? 10 * 1024 * 1024 : 5 * 1024 * 1024; // 10MB video, 5MB image
+      const maxSizeLabel = isVideo ? '10MB' : '5MB';
+
+      if (req.file.size > maxSize) {
+        throw new AppError(
+          `File too large. Maximum size allowed for ${isVideo ? 'videos' : 'images'} is ${maxSizeLabel}.`,
+          413,
+        );
+      }
+    }
+
     const gallery = await galleryService.createGallery(
       req.body as CreateGalleryInput,
       req.user!.userId,
@@ -49,6 +64,20 @@ export const galleryController = {
 
   // PUT /gallery/:id
   update: catchAsync(async (req: Request, res: Response): Promise<void> => {
+    // Validate file size based on media type
+    if (req.file) {
+      const isVideo = req.file.mimetype.startsWith('video/');
+      const maxSize = isVideo ? 10 * 1024 * 1024 : 5 * 1024 * 1024; // 10MB video, 5MB image
+      const maxSizeLabel = isVideo ? '10MB' : '5MB';
+
+      if (req.file.size > maxSize) {
+        throw new AppError(
+          `File too large. Maximum size allowed for ${isVideo ? 'videos' : 'images'} is ${maxSizeLabel}.`,
+          413,
+        );
+      }
+    }
+
     const gallery = await galleryService.updateGallery(
       req.params.id as string,
       req.body as UpdateGalleryInput,
