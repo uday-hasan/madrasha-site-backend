@@ -26,7 +26,7 @@ export const settingsController = {
 
   // Get settings by category (public)
   getByCategory: catchAsync(async (req: Request, res: Response) => {
-    const { category } = req.params;
+    const category = req.params.category as string;
     const result = await settingsService.getByCategory(category);
     sendResponse(res, {
       statusCode: 200,
@@ -37,7 +37,7 @@ export const settingsController = {
 
   // Get setting by key (public)
   getByKey: catchAsync(async (req: Request, res: Response) => {
-    const { key } = req.params;
+    const key = req.params.key as string;
     const result = await settingsService.getByKey(key);
     sendResponse(res, {
       statusCode: 200,
@@ -58,7 +58,7 @@ export const settingsController = {
 
   // Update setting (Admin only)
   update: catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const result = await settingsService.update(id, req.body);
     sendResponse(res, {
       statusCode: 200,
@@ -69,7 +69,7 @@ export const settingsController = {
 
   // Delete setting (Admin only)
   delete: catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     await settingsService.delete(id);
     sendResponse(res, {
       statusCode: 200,
