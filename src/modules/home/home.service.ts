@@ -1,4 +1,6 @@
 import { prisma } from '../../config/database';
+import { env } from '../../config/env';
+import { getFullUrl } from '../../utils/fileUpload';
 import type { UpdateHomeInput } from './home.validation';
 
 // ================================
@@ -23,27 +25,40 @@ export const homeService = {
       });
     }
 
+    // Ensure all hero slide image URLs have base URL
+    const heroSlidesWithFullUrls = (homePage.heroSlides as any[]).map((slide: any) => ({
+      ...slide,
+      imageUrl: slide.imageUrl ? getFullUrl(slide.imageUrl) : slide.imageUrl,
+    }));
+
     // Fetch featured notices for the home page news section
     const featuredNoticesLimit = homePage.featuredNoticesLimit || 3;
-    const featuredNotices = await prisma.notice.findMany({
-      where: { featured: true, isActive: true },
-      orderBy: { createdAt: 'desc' },
-      take: featuredNoticesLimit,
-      select: {
-        id: true,
-        title: true,
-        excerpt: true,
-        content: true,
-        category: true,
-        slug: true,
-        attachmentUrl: true,
-        createdAt: true,
-      },
-    });
+    let featuredNotices: any[] = [];
+    try {
+      featuredNotices = await prisma.notice.findMany({
+        where: { featured: true, isActive: true },
+        orderBy: { createdAt: 'desc' },
+        take: featuredNoticesLimit,
+        select: {
+          id: true,
+          title: true,
+          excerpt: true,
+          content: true,
+          category: true,
+          slug: true,
+          attachmentUrl: true,
+          createdAt: true,
+        },
+      });
+    } catch (error) {
+      console.error('Error fetching featured notices:', error);
+      // If there's an error fetching notices, just use empty array
+      featuredNotices = [];
+    }
 
     // Fetch latest gallery items for preview
     const galleryPreviewLimit = homePage.galleryPreviewLimit || 3;
-    const latestGallery = await prisma.gallery.findMany({
+    const latestGalleryRaw = await prisma.gallery.findMany({
       where: { mediaType: 'IMAGE' },
       orderBy: { createdAt: 'desc' },
       take: galleryPreviewLimit,
@@ -58,6 +73,13 @@ export const homeService = {
       },
     });
 
+    // Add full URLs to gallery items
+    const latestGallery = latestGalleryRaw.map((item: any) => ({
+      ...item,
+      imageUrl: item.imageUrl ? getFullUrl(item.imageUrl) : item.imageUrl,
+      videoUrl: item.videoUrl ? getFullUrl(item.videoUrl) : item.videoUrl,
+    }));
+
     // Fetch active departments
     const activeDepartments = await prisma.department.findMany({
       where: { isActive: true },
@@ -66,7 +88,7 @@ export const homeService = {
     });
 
     return {
-      heroSlides: homePage.heroSlides,
+      heroSlides: heroSlidesWithFullUrls,
       stats: homePage.stats,
       bannerImage: homePage.bannerImage,
       marqueeText: homePage.marqueeText,

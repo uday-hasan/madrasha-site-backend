@@ -15,9 +15,11 @@ export const noticeService = {
     const { skip, take } = getPaginationParams(page, limit);
 
     const where = {
-      ...(featured !== undefined && { featured }),
-      ...(isActive !== undefined && { isActive }),
-      ...(isImportant !== undefined && { isImportant }),
+      ...(featured !== undefined && { featured: String(featured) === 'true' ? true : false }),
+      ...(isActive !== undefined && { isActive: String(isActive) === 'true' ? true : false }),
+      ...(isImportant !== undefined && {
+        isImportant: String(isImportant) === 'true' ? true : false,
+      }),
       ...(category && { category }),
       ...(search && {
         OR: [

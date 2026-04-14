@@ -47,3 +47,23 @@ export const getFileUrl = (file: Express.Multer.File): string => {
   const relative = path.relative(process.cwd(), file.path);
   return filePathToUrl(relative);
 };
+
+/**
+ * Get the full URL with base URL for an uploaded file.
+ * e.g. "/uploads/images/123.jpg" → "http://localhost:5000/uploads/images/123.jpg"
+ */
+export const getFullFileUrl = (file: Express.Multer.File): string => {
+  const url = getFileUrl(file);
+  return `${env.BASE_URL}${url}`;
+};
+
+/**
+ * Convert a relative URL path to a full URL with base URL.
+ * e.g. "/uploads/images/123.jpg" → "http://localhost:5000/uploads/images/123.jpg"
+ */
+export const getFullUrl = (urlPath: string): string => {
+  if (urlPath.startsWith('http')) {
+    return urlPath; // Already a full URL
+  }
+  return `${env.BASE_URL}${urlPath}`;
+};

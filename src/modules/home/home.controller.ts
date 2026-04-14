@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { homeService } from './home.service';
 import { catchAsync } from '../../utils/catchAsync';
 import { sendResponse } from '../../utils/sendResponse';
-import { getFileUrl } from '../../utils/fileUpload';
+import { getFullFileUrl } from '../../utils/fileUpload';
 
 // ================================
 // HOME CONTROLLER
@@ -30,7 +30,7 @@ export const homeController = {
       return;
     }
 
-    const imageUrl = getFileUrl(req.file);
+    const imageUrl = getFullFileUrl(req.file);
     sendResponse(res, {
       statusCode: 200,
       message: 'ছবি সফলভাবে আপলোড হয়েছে',
