@@ -52,3 +52,8 @@ export type Department = Prisma.DepartmentModel
  * 
  */
 export type SiteSettings = Prisma.SiteSettingsModel
+/**
+ * Model Teacher
+ * 
+ */
+export type Teacher = Prisma.TeacherModel

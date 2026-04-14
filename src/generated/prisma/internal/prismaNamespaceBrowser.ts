@@ -57,7 +57,8 @@ export const ModelName = {
   Notice: 'Notice',
   HomePage: 'HomePage',
   Department: 'Department',
-  SiteSettings: 'SiteSettings'
+  SiteSettings: 'SiteSettings',
+  Teacher: 'Teacher'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -183,6 +184,26 @@ export const SiteSettingsScalarFieldEnum = {
 } as const
 
 export type SiteSettingsScalarFieldEnum = (typeof SiteSettingsScalarFieldEnum)[keyof typeof SiteSettingsScalarFieldEnum]
+
+
+export const TeacherScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  designation: 'designation',
+  department: 'department',
+  education: 'education',
+  experience: 'experience',
+  photoUrl: 'photoUrl',
+  bio: 'bio',
+  phone: 'phone',
+  email: 'email',
+  isActive: 'isActive',
+  displayOrder: 'displayOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TeacherScalarFieldEnum = (typeof TeacherScalarFieldEnum)[keyof typeof TeacherScalarFieldEnum]
 
 
 export const SortOrder = {

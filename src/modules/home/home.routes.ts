@@ -4,6 +4,7 @@ import { validateRequest } from '../../middlewares/validateRequest';
 import { authenticate, authorize } from '../../middlewares/authenticate';
 import { Role } from '@/generated/prisma/enums';
 import { updateHomeSchema } from './home.validation';
+import { upload } from '../../config/multer';
 
 const router = Router();
 
@@ -25,6 +26,36 @@ const router = Router();
  *         description: Home page data
  */
 router.get('/', homeController.get);
+
+/**
+ * @swagger
+ * /home/upload:
+ *   post:
+ *     summary: Upload hero slide image (Admin only)
+ *     tags: [Home]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Image uploaded successfully
+ */
+router.post(
+  '/upload',
+  authenticate,
+  authorize(Role.ADMIN),
+  upload.single('image'),
+  homeController.uploadImage,
+);
 
 /**
  * @swagger

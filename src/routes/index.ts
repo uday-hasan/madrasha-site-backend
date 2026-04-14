@@ -5,6 +5,8 @@ import galleryRoutes from '../modules/gallery/gallery.routes';
 import noticeRoutes from '../modules/notice/notice.routes';
 import homeRoutes from '../modules/home/home.routes';
 import departmentRoutes from '../modules/department/department.routes';
+import { settingsRoutes } from '../modules/settings/settings.routes';
+import { teacherRoutes } from '../modules/teacher/teacher.routes';
 
 // ================================
 // MAIN ROUTER
@@ -20,5 +22,7 @@ router.use('/gallery', galleryRoutes);
 router.use('/notices', noticeRoutes);
 router.use('/home', homeRoutes);
 router.use('/departments', departmentRoutes);
+router.use('/settings', settingsRoutes);
+router.use('/teachers', teacherRoutes);
 
 export default router;
