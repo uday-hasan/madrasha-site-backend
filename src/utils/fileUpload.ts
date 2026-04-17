@@ -35,9 +35,9 @@ export const filePathToUrl = (filePath: string): string => {
  * Convert a public URL path back to a local file path.
  * e.g. "/uploads/images/123.jpg" → "./uploads/images/123.jpg"
  */
-export const urlToFilePath = (url: string): string => {
-  return path.join(env.UPLOAD_DIR, url.replace(/^\/uploads\//, ''));
-};
+// export const urlToFilePath = (url: string): string => {
+//   return path.join(env.UPLOAD_DIR, url.replace(/^\/uploads\//, ''));
+// };
 
 /**
  * Get the public URL for an uploaded file from its multer file object.
@@ -61,9 +61,28 @@ export const getFullFileUrl = (file: Express.Multer.File): string => {
  * Convert a relative URL path to a full URL with base URL.
  * e.g. "/uploads/images/123.jpg" → "http://localhost:5000/uploads/images/123.jpg"
  */
-export const getFullUrl = (urlPath: string): string => {
-  if (urlPath.startsWith('http')) {
-    return urlPath; // Already a full URL
+// export const getFullUrl = (urlPath: string): string => {
+//   if (urlPath.startsWith('http')) {
+//     return urlPath; // Already a full URL
+//   }
+//   return `${env.BASE_URL}${urlPath}`;
+// };
+
+export const urlToFilePath = (fullUrl: string): string | null => {
+  // If the URL starts with our backend URL, it's a local file
+  if (fullUrl.startsWith(env.BACKEND_URL)) {
+    // Remove the base URL to get the relative path (e.g., /uploads/images/file.jpg)
+    const relativePath = fullUrl.replace(env.BACKEND_URL, '');
+    // Your deleteFile function expects a path relative to the project root
+    // e.g., 'public/uploads/images/file.jpg' or just 'uploads/images/file.jpg'
+    // depending on your express.static setup.
+    return relativePath.startsWith('/') ? relativePath.substring(1) : relativePath;
   }
-  return `${env.BASE_URL}${urlPath}`;
+  return null; // It's an external link (YouTube/FB), no file to delete
+};
+
+export const getFullUrl = (relativePath: string) => {
+  if (!relativePath) return null;
+  if (relativePath.startsWith('http')) return relativePath; // Already a URL
+  return `${env.BACKEND_URL}${relativePath.startsWith('/') ? '' : '/'}${relativePath}`;
 };

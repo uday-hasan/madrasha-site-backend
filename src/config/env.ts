@@ -29,6 +29,7 @@ const envSchema = z.object({
 
   // Server Base URL
   BASE_URL: z.string().default('http://localhost:5000'),
+  BACKEND_URL: z.string().default('http://localhost:5000'),
 
   // Rate limiting
   RATE_LIMIT_MAX: z.string().default('100').transform(Number),

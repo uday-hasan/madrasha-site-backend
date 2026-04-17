@@ -1,13 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { prisma } from '../../config/database';
 import { AppError } from '../../utils/AppError';
 import { getPaginationParams } from '../../utils/pagination';
-import { deleteFile, urlToFilePath } from '../../utils/fileUpload';
-import type { CreateGalleryInput, UpdateGalleryInput, GalleryQuery } from './gallery.validation';
+import { deleteFile, getFullUrl, urlToFilePath } from '../../utils/fileUpload';
+import type { GalleryQuery } from './gallery.validation';
 import { MediaType } from '@/generated/prisma/enums';
-
-// ================================
-// GALLERY SERVICE
-// ================================
 
 export const galleryService = {
   // ---- GET ALL ----
@@ -64,113 +61,91 @@ export const galleryService = {
   },
 
   // ---- CREATE ----
-  async createGallery(data: CreateGalleryInput, userId: string, file?: Express.Multer.File) {
-    const {
-      title,
-      description,
-      mediaType,
-      category,
-      featured,
-      videoUrl,
-      imageUrl: inputImageUrl,
-    } = data;
+  async createGallery(data: any, userId: string, file?: Express.Multer.File) {
+    const { title, description, mediaType, category, videoUrl, imageUrl: inputImageUrl } = data;
 
-    let imageUrl: string | undefined;
+    let finalImageUrl: string | undefined;
     let finalVideoUrl: string | undefined;
 
-    if (mediaType === 'VIDEO' && videoUrl) {
-      finalVideoUrl = videoUrl;
-    } else if (mediaType === 'IMAGE' && inputImageUrl) {
-      imageUrl = inputImageUrl;
-    } else if (file) {
-      if (mediaType === 'VIDEO') {
-        finalVideoUrl = `/uploads/videos/${file.filename}`;
-      } else {
-        imageUrl = `/uploads/images/${file.filename}`;
-      }
-    } else if (mediaType === 'VIDEO') {
-      throw new AppError('Either a video file or videoUrl is required for VIDEO type', 400);
-    } else if (mediaType === 'IMAGE') {
-      throw new AppError('Either an image file or imageUrl is required for IMAGE type', 400);
+    if (mediaType === 'VIDEO') {
+      // If there's an external URL (YT/FB), use it. Otherwise, use the uploaded file.
+      finalVideoUrl = videoUrl
+        ? videoUrl
+        : file
+          ? getFullUrl(`/uploads/videos/${file.filename}`)
+          : undefined;
+    } else {
+      // For IMAGE: use external link if provided, otherwise the file
+      finalImageUrl = inputImageUrl
+        ? inputImageUrl
+        : file
+          ? getFullUrl(`/uploads/images/${file.filename}`)
+          : undefined;
     }
 
-    const gallery = await prisma.gallery.create({
+    if (!finalImageUrl && !finalVideoUrl) {
+      throw new AppError('মিডিয়া ফাইল অথবা ইউআরএল আবশ্যক', 400);
+    }
+
+    return await prisma.gallery.create({
       data: {
         title,
         description,
-        imageUrl,
+        mediaType,
+        category: category || 'General',
+        imageUrl: finalImageUrl,
         videoUrl: finalVideoUrl,
-        mediaType: mediaType as MediaType,
-        category: category ?? 'general',
-        featured: featured ?? false,
         uploadedBy: userId,
       },
-      include: {
-        uploader: { select: { id: true, name: true } },
-      },
+      include: { uploader: { select: { id: true, name: true } } },
     });
-
-    return gallery;
   },
 
   // ---- UPDATE ----
-  async updateGallery(id: string, data: UpdateGalleryInput, file?: Express.Multer.File) {
+  async updateGallery(id: string, data: any, file?: Express.Multer.File) {
     const existing = await prisma.gallery.findUnique({ where: { id } });
-    if (!existing) {
-      throw new AppError('Gallery item not found', 404);
-    }
+    if (!existing) throw new AppError('আইটেমটি পাওয়া যায়নি', 404);
 
-    let imageUrl = data.imageUrl ?? existing.imageUrl ?? undefined;
-    let videoUrl = data.videoUrl ?? existing.videoUrl ?? undefined;
+    let imageUrl = data.imageUrl || existing.imageUrl;
+    let videoUrl = data.videoUrl || existing.videoUrl;
 
-    // If a new file is uploaded, delete the old one and update the path
     if (file) {
-      if (data.mediaType === 'VIDEO' || existing.mediaType === 'VIDEO') {
-        if (existing.videoUrl && !existing.videoUrl.startsWith('http')) {
-          deleteFile(urlToFilePath(existing.videoUrl));
-        }
-        videoUrl = `/uploads/videos/${file.filename}`;
+      // Delete old local file if it exists
+      const oldPath = urlToFilePath(existing.imageUrl || existing.videoUrl || '');
+      if (oldPath) deleteFile(oldPath);
+
+      // Save new file path as full URL
+      const folder = data.mediaType === 'VIDEO' ? 'videos' : 'images';
+      const newUrl = getFullUrl(`/uploads/${folder}/${file.filename}`);
+
+      if (data.mediaType === 'VIDEO') {
+        videoUrl = newUrl;
+        imageUrl = null;
       } else {
-        if (existing.imageUrl && !existing.imageUrl.startsWith('http')) {
-          deleteFile(urlToFilePath(existing.imageUrl));
-        }
-        imageUrl = `/uploads/images/${file.filename}`;
+        imageUrl = newUrl;
+        videoUrl = null;
       }
     }
 
-    const gallery = await prisma.gallery.update({
+    return await prisma.gallery.update({
       where: { id },
-      data: {
-        ...(data.title !== undefined && { title: data.title }),
-        ...(data.description !== undefined && { description: data.description }),
-        ...(data.mediaType !== undefined && { mediaType: data.mediaType as MediaType }),
-        ...(data.category !== undefined && { category: data.category }),
-        ...(data.featured !== undefined && { featured: data.featured }),
-        imageUrl,
-        videoUrl,
-      },
-      include: {
-        uploader: { select: { id: true, name: true } },
-      },
+      data: { ...data, imageUrl, videoUrl },
+      include: { uploader: { select: { id: true, name: true } } },
     });
-
-    return gallery;
   },
 
   // ---- DELETE ----
   async deleteGallery(id: string) {
-    const gallery = await prisma.gallery.findUnique({ where: { id } });
-    if (!gallery) {
-      throw new AppError('Gallery item not found', 404);
-    }
+    const item = await prisma.gallery.findUnique({ where: { id } });
+    if (!item) throw new AppError('আইটেমটি পাওয়া যায়নি', 404);
 
-    // Delete associated files
-    if (gallery.imageUrl) {
-      deleteFile(urlToFilePath(gallery.imageUrl));
-    }
-    if (gallery.videoUrl && !gallery.videoUrl.startsWith('http')) {
-      deleteFile(urlToFilePath(gallery.videoUrl));
-    }
+    // Try to delete local file for both image and video fields
+    [item.imageUrl, item.videoUrl].forEach((url) => {
+      if (url) {
+        const filePath = urlToFilePath(url);
+        if (filePath) deleteFile(filePath);
+      }
+    });
 
     await prisma.gallery.delete({ where: { id } });
   },
