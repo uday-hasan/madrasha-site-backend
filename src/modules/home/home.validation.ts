@@ -26,17 +26,6 @@ export const updateHomeSchema = {
   body: z.object({
     heroSlides: z.array(heroSlideSchema).optional(),
     stats: z.array(statSchema).optional(),
-    bannerImage: z.string().optional(),
-    marqueeText: z.string().max(2000).optional(),
-    aboutSummary: z.string().max(5000).optional(),
-    featuredNoticesLimit: z
-      .union([z.number(), z.string()])
-      .optional()
-      .transform((val) => (typeof val === 'string' ? parseInt(val, 10) || 3 : (val ?? 3))),
-    galleryPreviewLimit: z
-      .union([z.number(), z.string()])
-      .optional()
-      .transform((val) => (typeof val === 'string' ? parseInt(val, 10) || 3 : (val ?? 3))),
   }),
 };
 

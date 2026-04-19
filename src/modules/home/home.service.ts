@@ -1,5 +1,5 @@
 import { prisma } from '../../config/database';
-import { getFullUrl } from '../../utils/fileUpload';
+import { deleteFile, getFullUrl, urlToFilePath } from '../../utils/fileUpload';
 import type { UpdateHomeInput } from './home.validation';
 
 // ================================
@@ -7,8 +7,8 @@ import type { UpdateHomeInput } from './home.validation';
 // ================================
 
 export const homeService = {
-  // ---- GET HOME PAGE DATA ----
-  // Returns heroSlides, stats, featured notices, latest notices, and gallery items.
+  // ---- GET HOME PAGE DATA (Public) ----
+  // Returns heroSlides, stats, featured notices, and gallery items.
   async getHomeData() {
     // Get (or create) the singleton HomePage record
     let homePage = await prisma.homePage.findFirst({
@@ -30,14 +30,13 @@ export const homeService = {
       imageUrl: slide.imageUrl ? getFullUrl(slide.imageUrl) : slide.imageUrl,
     }));
 
-    // Fetch featured notices for the home page news section
-    const featuredNoticesLimit = homePage.featuredNoticesLimit || 3;
+    // Fetch featured notices for the home page news section (limit to 3)
     let featuredNotices: any[] = [];
     try {
       featuredNotices = await prisma.notice.findMany({
         where: { featured: true, isActive: true },
         orderBy: { createdAt: 'desc' },
-        take: featuredNoticesLimit,
+        take: 3,
         select: {
           id: true,
           title: true,
@@ -51,16 +50,14 @@ export const homeService = {
       });
     } catch (error) {
       console.error('Error fetching featured notices:', error);
-      // If there's an error fetching notices, just use empty array
       featuredNotices = [];
     }
 
-    // Fetch latest gallery items for preview
-    const galleryPreviewLimit = homePage.galleryPreviewLimit || 3;
+    // Fetch latest gallery items for preview (limit to 3)
     const latestGalleryRaw = await prisma.gallery.findMany({
       where: { mediaType: 'IMAGE' },
       orderBy: { createdAt: 'desc' },
-      take: galleryPreviewLimit,
+      take: 3,
       select: {
         id: true,
         title: true,
@@ -89,55 +86,155 @@ export const homeService = {
     return {
       heroSlides: heroSlidesWithFullUrls,
       stats: homePage.stats,
-      bannerImage: homePage.bannerImage,
-      marqueeText: homePage.marqueeText,
-      aboutSummary: homePage.aboutSummary,
-      featuredNoticesLimit: homePage.featuredNoticesLimit,
-      galleryPreviewLimit: homePage.galleryPreviewLimit,
       featuredNotices,
       latestGallery,
       activeDepartments,
     };
   },
 
-  // ---- UPDATE HOME PAGE CONTENT (Admin only) ----
-  async updateHomeData(data: UpdateHomeInput) {
-    // Get existing record or create one
+  // ---- GET HERO SLIDES (Admin only) ----
+  async getSlides() {
+    let homePage = await prisma.homePage.findFirst({
+      orderBy: { createdAt: 'desc' },
+    });
+
+    if (!homePage) {
+      homePage = await prisma.homePage.create({
+        data: {
+          heroSlides: [],
+          stats: [],
+        },
+      });
+    }
+
+    const heroSlidesWithFullUrls = (homePage.heroSlides as any[]).map((slide: any) => ({
+      ...slide,
+      imageUrl: slide.imageUrl ? getFullUrl(slide.imageUrl) : slide.imageUrl,
+    }));
+
+    return { heroSlides: heroSlidesWithFullUrls };
+  },
+
+  // ---- UPDATE HERO SLIDES (Admin only) ----
+  async updateSlides(data: UpdateHomeInput) {
     const existing = await prisma.homePage.findFirst({
       orderBy: { createdAt: 'desc' },
     });
 
-    const updateData: any = {
-      ...(data.heroSlides !== undefined && { heroSlides: data.heroSlides }),
-      ...(data.stats !== undefined && { stats: data.stats }),
-      ...(data.bannerImage !== undefined && { bannerImage: data.bannerImage }),
-      ...(data.marqueeText !== undefined && { marqueeText: data.marqueeText }),
-      ...(data.aboutSummary !== undefined && { aboutSummary: data.aboutSummary }),
-      ...(data.featuredNoticesLimit !== undefined && {
-        featuredNoticesLimit: data.featuredNoticesLimit,
-      }),
-      ...(data.galleryPreviewLimit !== undefined && {
-        galleryPreviewLimit: data.galleryPreviewLimit,
-      }),
-    };
-
     if (existing) {
       return prisma.homePage.update({
         where: { id: existing.id },
-        data: updateData,
+        data: {
+          ...(data.heroSlides !== undefined && { heroSlides: data.heroSlides }),
+        },
       });
     }
 
     return prisma.homePage.create({
       data: {
         heroSlides: data.heroSlides ?? [],
-        stats: data.stats ?? [],
-        bannerImage: data.bannerImage,
-        marqueeText: data.marqueeText,
-        aboutSummary: data.aboutSummary,
-        featuredNoticesLimit: data.featuredNoticesLimit ?? 3,
-        galleryPreviewLimit: data.galleryPreviewLimit ?? 3,
+        stats: [],
       },
+    });
+  },
+
+  // ---- GET STATISTICS (Admin only) ----
+  async getStats() {
+    let homePage = await prisma.homePage.findFirst({
+      orderBy: { createdAt: 'desc' },
+    });
+
+    if (!homePage) {
+      homePage = await prisma.homePage.create({
+        data: {
+          heroSlides: [],
+          stats: [],
+        },
+      });
+    }
+
+    return { stats: homePage.stats };
+  },
+
+  // ---- UPDATE STATISTICS (Admin only) ----
+  async updateStats(data: UpdateHomeInput) {
+    const existing = await prisma.homePage.findFirst({
+      orderBy: { createdAt: 'desc' },
+    });
+
+    if (existing) {
+      return prisma.homePage.update({
+        where: { id: existing.id },
+        data: {
+          ...(data.stats !== undefined && { stats: data.stats }),
+        },
+      });
+    }
+
+    return prisma.homePage.create({
+      data: {
+        heroSlides: [],
+        stats: data.stats ?? [],
+      },
+    });
+  },
+  async upsertSlide(data: any, file?: Express.Multer.File) {
+    const homePage = await prisma.homePage.findFirst({ orderBy: { createdAt: 'desc' } });
+    if (!homePage) throw new Error('Home page record not found');
+
+    const heroSlides = (homePage.heroSlides as any[]) || [];
+    const slideId = data.id; // Existing ID if updating
+
+    const targetIndex = slideId ? heroSlides.findIndex((s) => s.id === slideId) : -1;
+    let imageUrl = data.imageUrl; // Keep old URL if no new file
+
+    if (file) {
+      // If updating, delete the old file first
+      if (targetIndex !== -1 && heroSlides[targetIndex].imageUrl) {
+        const oldPath = urlToFilePath(heroSlides[targetIndex].imageUrl);
+        if (oldPath) deleteFile(oldPath);
+      }
+      imageUrl = getFullUrl(`/uploads/images/${file.filename}`);
+    }
+
+    const newSlideData = {
+      id: slideId || `slide_${Date.now()}`,
+      title: data.title,
+      subtitle: data.subtitle,
+      description: data.description,
+      ctaText: data.ctaText,
+      ctaLink: data.ctaLink,
+      imageUrl: imageUrl || '',
+    };
+
+    if (targetIndex !== -1) {
+      heroSlides[targetIndex] = newSlideData;
+    } else {
+      heroSlides.push(newSlideData);
+    }
+
+    return await prisma.homePage.update({
+      where: { id: homePage.id },
+      data: { heroSlides },
+    });
+  },
+
+  async deleteSlide(slideId: string) {
+    const homePage = await prisma.homePage.findFirst({ orderBy: { createdAt: 'desc' } });
+    if (!homePage) return;
+
+    const heroSlides = (homePage.heroSlides as any[]) || [];
+    const slideToDelete = heroSlides.find((s) => s.id === slideId);
+
+    if (slideToDelete?.imageUrl) {
+      const path = urlToFilePath(slideToDelete.imageUrl);
+      if (path) deleteFile(path);
+    }
+
+    const updatedSlides = heroSlides.filter((s) => s.id !== slideId);
+    return await prisma.homePage.update({
+      where: { id: homePage.id },
+      data: { heroSlides: updatedSlides },
     });
   },
 };
