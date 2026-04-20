@@ -152,9 +152,15 @@ export const galleryService = {
       }
     }
 
+    // Build update data object, explicitly handling featured field
+    const updateData: any = { ...data, imageUrl, videoUrl };
+    if (data.featured !== undefined) {
+      updateData.featured = data.featured;
+    }
+
     return await prisma.gallery.update({
       where: { id },
-      data: { ...data, imageUrl, videoUrl },
+      data: updateData,
       include: { uploader: { select: { id: true, name: true } } },
     });
   },
