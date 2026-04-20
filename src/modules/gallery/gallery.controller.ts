@@ -53,6 +53,7 @@ export const galleryController = {
       req.body as CreateGalleryInput,
       req.user!.userId,
       req.file,
+      req,
     );
 
     sendResponse(res, {
@@ -82,6 +83,7 @@ export const galleryController = {
       req.params.id as string,
       req.body as UpdateGalleryInput,
       req.file,
+      req,
     );
 
     sendResponse(res, {

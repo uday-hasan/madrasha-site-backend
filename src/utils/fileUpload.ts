@@ -81,8 +81,9 @@ export const urlToFilePath = (fullUrl: string): string | null => {
   return null; // It's an external link (YouTube/FB), no file to delete
 };
 
-export const getFullUrl = (relativePath: string) => {
+export const getFullUrl = (relativePath: string, baseUrl?: string) => {
   if (!relativePath) return null;
   if (relativePath.startsWith('http')) return relativePath; // Already a URL
-  return `${env.BACKEND_URL}${relativePath.startsWith('/') ? '' : '/'}${relativePath}`;
+  const base = baseUrl || env.BACKEND_URL;
+  return `${base}${relativePath.startsWith('/') ? '' : '/'}${relativePath}`;
 };

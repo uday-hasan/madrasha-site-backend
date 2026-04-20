@@ -3,7 +3,11 @@ import { departmentService } from './department.service';
 import { catchAsync } from '../../utils/catchAsync';
 import { sendResponse } from '../../utils/sendResponse';
 import { AppError } from '../../utils/AppError';
-import type { CreateDepartmentInput, UpdateDepartmentInput, DepartmentQuery } from './department.validation';
+import type {
+  CreateDepartmentInput,
+  UpdateDepartmentInput,
+  DepartmentQuery,
+} from './department.validation';
 
 // ================================
 // DEPARTMENT CONTROLLER
@@ -12,7 +16,9 @@ import type { CreateDepartmentInput, UpdateDepartmentInput, DepartmentQuery } fr
 export const departmentController = {
   // GET /departments
   getAll: catchAsync(async (req: Request, res: Response): Promise<void> => {
-    const result = await departmentService.getAllDepartments(req.query as unknown as DepartmentQuery);
+    const result = await departmentService.getAllDepartments(
+      req.query as unknown as DepartmentQuery,
+    );
 
     sendResponse(res, {
       statusCode: 200,
@@ -65,6 +71,7 @@ export const departmentController = {
     const department = await departmentService.createDepartment(
       req.body as CreateDepartmentInput,
       req.file,
+      req,
     );
 
     sendResponse(res, {
@@ -85,6 +92,7 @@ export const departmentController = {
       req.params.id as string,
       req.body as UpdateDepartmentInput,
       req.file,
+      req,
     );
 
     sendResponse(res, {

@@ -2,8 +2,12 @@ import { prisma } from '../../config/database';
 import { AppError } from '../../utils/AppError';
 import { getPaginationParams } from '../../utils/pagination';
 import { slugify, generateUniqueSlug } from '../../utils/helpers';
-import { deleteFile, urlToFilePath } from '../../utils/fileUpload';
-import type { CreateDepartmentInput, UpdateDepartmentInput, DepartmentQuery } from './department.validation';
+import { deleteFile, urlToFilePath, getFullUrl } from '../../utils/fileUpload';
+import type {
+  CreateDepartmentInput,
+  UpdateDepartmentInput,
+  DepartmentQuery,
+} from './department.validation';
 
 // ================================
 // DEPARTMENT SERVICE
@@ -77,7 +81,7 @@ export const departmentService = {
   },
 
   // ---- CREATE ----
-  async createDepartment(data: CreateDepartmentInput, file?: Express.Multer.File) {
+  async createDepartment(data: CreateDepartmentInput, file?: Express.Multer.File, req?: any) {
     const {
       name,
       description,
@@ -99,10 +103,18 @@ export const departmentService = {
       finalSlug = generateUniqueSlug(name);
     }
 
+    // Detect base URL from request if available
+    let baseUrl = undefined;
+    if (req) {
+      const protocol = req.protocol || 'http';
+      const host = req.get('host') || 'localhost:5000';
+      baseUrl = `${protocol}://${host}`;
+    }
+
     // Handle file upload
     let imageUrl: string | undefined;
     if (file) {
-      imageUrl = `/uploads/images/${file.filename}`;
+      imageUrl = getFullUrl(`/uploads/images/${file.filename}`, baseUrl);
     }
 
     return prisma.department.create({
@@ -122,7 +134,12 @@ export const departmentService = {
   },
 
   // ---- UPDATE ----
-  async updateDepartment(id: string, data: UpdateDepartmentInput, file?: Express.Multer.File) {
+  async updateDepartment(
+    id: string,
+    data: UpdateDepartmentInput,
+    file?: Express.Multer.File,
+    req?: any,
+  ) {
     const existing = await prisma.department.findUnique({ where: { id } });
     if (!existing) {
       throw new AppError('Department not found', 404);
@@ -142,6 +159,14 @@ export const departmentService = {
       finalSlug = newSlug;
     }
 
+    // Detect base URL from request if available
+    let baseUrl = undefined;
+    if (req) {
+      const protocol = req.protocol || 'http';
+      const host = req.get('host') || 'localhost:5000';
+      baseUrl = `${protocol}://${host}`;
+    }
+
     // Handle file upload
     let imageUrl = data.imageUrl ?? existing.imageUrl ?? undefined;
     if (file) {
@@ -149,7 +174,7 @@ export const departmentService = {
       if (existing.imageUrl && !existing.imageUrl.startsWith('http')) {
         deleteFile(urlToFilePath(existing.imageUrl));
       }
-      imageUrl = `/uploads/images/${file.filename}`;
+      imageUrl = getFullUrl(`/uploads/images/${file.filename}`, baseUrl);
     }
 
     return prisma.department.update({

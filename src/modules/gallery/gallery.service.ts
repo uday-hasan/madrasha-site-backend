@@ -61,8 +61,16 @@ export const galleryService = {
   },
 
   // ---- CREATE ----
-  async createGallery(data: any, userId: string, file?: Express.Multer.File) {
+  async createGallery(data: any, userId: string, file?: Express.Multer.File, req?: any) {
     const { title, description, mediaType, category, videoUrl, imageUrl: inputImageUrl } = data;
+
+    // Detect base URL from request if available
+    let baseUrl = undefined;
+    if (req) {
+      const protocol = req.protocol || 'http';
+      const host = req.get('host') || 'localhost:5000';
+      baseUrl = `${protocol}://${host}`;
+    }
 
     let finalImageUrl: string | undefined;
     let finalVideoUrl: string | undefined;
@@ -72,14 +80,14 @@ export const galleryService = {
       finalVideoUrl = videoUrl
         ? videoUrl
         : file
-          ? getFullUrl(`/uploads/videos/${file.filename}`)
+          ? getFullUrl(`/uploads/videos/${file.filename}`, baseUrl)
           : undefined;
     } else {
       // For IMAGE: use external link if provided, otherwise the file
       finalImageUrl = inputImageUrl
         ? inputImageUrl
         : file
-          ? getFullUrl(`/uploads/images/${file.filename}`)
+          ? getFullUrl(`/uploads/images/${file.filename}`, baseUrl)
           : undefined;
     }
 
@@ -102,9 +110,17 @@ export const galleryService = {
   },
 
   // ---- UPDATE ----
-  async updateGallery(id: string, data: any, file?: Express.Multer.File) {
+  async updateGallery(id: string, data: any, file?: Express.Multer.File, req?: any) {
     const existing = await prisma.gallery.findUnique({ where: { id } });
-    if (!existing) throw new AppError('আইটেমটি পাওয়া যায়নি', 404);
+    if (!existing) throw new AppError('আইটেমটি পাওয়া যায়নি', 404);
+
+    // Detect base URL from request if available
+    let baseUrl = undefined;
+    if (req) {
+      const protocol = req.protocol || 'http';
+      const host = req.get('host') || 'localhost:5000';
+      baseUrl = `${protocol}://${host}`;
+    }
 
     let imageUrl = data.imageUrl || existing.imageUrl;
     let videoUrl = data.videoUrl || existing.videoUrl;
@@ -116,7 +132,7 @@ export const galleryService = {
 
       // Save new file path as full URL
       const folder = data.mediaType === 'VIDEO' ? 'videos' : 'images';
-      const newUrl = getFullUrl(`/uploads/${folder}/${file.filename}`);
+      const newUrl = getFullUrl(`/uploads/${folder}/${file.filename}`, baseUrl);
 
       if (data.mediaType === 'VIDEO') {
         videoUrl = newUrl;
