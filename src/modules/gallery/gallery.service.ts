@@ -62,7 +62,15 @@ export const galleryService = {
 
   // ---- CREATE ----
   async createGallery(data: any, userId: string, file?: Express.Multer.File, req?: any) {
-    const { title, description, mediaType, category, videoUrl, imageUrl: inputImageUrl } = data;
+    const {
+      title,
+      description,
+      mediaType,
+      category,
+      videoUrl,
+      imageUrl: inputImageUrl,
+      featured,
+    } = data;
 
     // Detect base URL from request if available
     let baseUrl = undefined;
@@ -103,6 +111,7 @@ export const galleryService = {
         category: category || 'General',
         imageUrl: finalImageUrl,
         videoUrl: finalVideoUrl,
+        featured: featured ?? false,
         uploadedBy: userId,
       },
       include: { uploader: { select: { id: true, name: true } } },

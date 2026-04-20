@@ -53,9 +53,9 @@ export const homeService = {
       featuredNotices = [];
     }
 
-    // Fetch latest gallery items for preview (limit to 3)
+    // Fetch latest gallery items for preview (limit to 3 featured items only)
     const latestGalleryRaw = await prisma.gallery.findMany({
-      where: { mediaType: 'IMAGE' },
+      where: { featured: true, mediaType: 'IMAGE' },
       orderBy: { createdAt: 'desc' },
       take: 3,
       select: {
