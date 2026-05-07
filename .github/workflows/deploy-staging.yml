@@ -21,7 +21,7 @@ jobs:
             cd /var/www/api-staging
             git fetch origin
             git checkout staging
-            git pull origin staging
+            git reset --hard origin/staging
             /root/.bun/bin/bun install
             /root/.bun/bin/bun run prisma:generate
             /root/.bun/bin/bun run prisma:migrate:prod
