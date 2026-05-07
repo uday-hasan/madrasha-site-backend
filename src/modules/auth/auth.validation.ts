@@ -60,7 +60,7 @@ export const changePasswordSchema = {
       }),
 
       newPassword: z
-        .string({ required_error: 'New password is required' })
+        .string({ required_error: 'New password is required ' })
         .min(8, 'Password must be at least 8 characters')
         .max(100, 'Password must be less than 100 characters')
         .regex(
