@@ -112,9 +112,9 @@ export const departmentService = {
     }
 
     // Handle file upload
-    let imageUrl: string | undefined;
+    let imageUrl: string | null | undefined;
     if (file) {
-      imageUrl = getFullUrl(`/uploads/images/${file.filename}`, baseUrl);
+      imageUrl = getFullUrl(`/uploads/images/${file.filename}`, baseUrl) || undefined;
     }
 
     return prisma.department.create({
@@ -172,9 +172,12 @@ export const departmentService = {
     if (file) {
       // Delete old file if exists
       if (existing.imageUrl && !existing.imageUrl.startsWith('http')) {
-        deleteFile(urlToFilePath(existing.imageUrl));
+        const filePath = urlToFilePath(existing.imageUrl);
+        if (filePath) {
+          deleteFile(filePath);
+        }
       }
-      imageUrl = getFullUrl(`/uploads/images/${file.filename}`, baseUrl);
+      imageUrl = getFullUrl(`/uploads/images/${file.filename}`, baseUrl) || undefined;
     }
 
     return prisma.department.update({
@@ -203,7 +206,10 @@ export const departmentService = {
 
     // Delete associated image file
     if (department.imageUrl && !department.imageUrl.startsWith('http')) {
-      deleteFile(urlToFilePath(department.imageUrl));
+      const filePath = urlToFilePath(department.imageUrl);
+      if (filePath) {
+        deleteFile(filePath);
+      }
     }
 
     await prisma.department.delete({ where: { id } });
