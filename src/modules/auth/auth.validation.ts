@@ -68,11 +68,11 @@ export const changePasswordSchema = {
           'Password must contain at least one uppercase letter, one lowercase letter, and one number',
         ),
 
-      confirmNewPassword: z.string({
+      confirmPassword: z.string({
         required_error: 'Please confirm your new password',
       }),
     })
-    .refine((data) => data.newPassword === data.confirmNewPassword, {
+    .refine((data) => data.newPassword === data.confirmPassword, {
       message: 'Passwords do not match',
       path: ['confirmNewPassword'],
     }),
