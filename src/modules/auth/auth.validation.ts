@@ -74,7 +74,7 @@ export const changePasswordSchema = {
     })
     .refine((data) => data.newPassword === data.confirmPassword, {
       message: 'Passwords do not match',
-      path: ['confirmNewPassword'],
+      path: ['confirmPassword'],
     }),
 };
 
