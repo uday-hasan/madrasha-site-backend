@@ -7,6 +7,9 @@ import homeRoutes from '../modules/home/home.routes';
 import departmentRoutes from '../modules/department/department.routes';
 import { settingsRoutes } from '../modules/settings/settings.routes';
 import { teacherRoutes } from '../modules/teacher/teacher.routes';
+import { qaRoutes } from '../modules/qa/qa.routes';
+import { donationRouter } from '../modules/donation/donation.routes';
+import { contactRouter } from '../modules/contact/contact.routes';
 
 // ================================
 // MAIN ROUTER
@@ -24,5 +27,8 @@ router.use('/home', homeRoutes);
 router.use('/departments', departmentRoutes);
 router.use('/settings', settingsRoutes);
 router.use('/teachers', teacherRoutes);
+router.use('/qa', qaRoutes);
+router.use('/donation', donationRouter);
+router.use('/contact', contactRouter);
 
 export default router;

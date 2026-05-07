@@ -56,9 +56,14 @@ export const ModelName = {
   Gallery: 'Gallery',
   Notice: 'Notice',
   HomePage: 'HomePage',
+  DonationPage: 'DonationPage',
+  ContactPage: 'ContactPage',
   Department: 'Department',
   SiteSettings: 'SiteSettings',
-  Teacher: 'Teacher'
+  Teacher: 'Teacher',
+  Question: 'Question',
+  Answer: 'Answer',
+  Reply: 'Reply'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -141,16 +146,43 @@ export const HomePageScalarFieldEnum = {
   id: 'id',
   heroSlides: 'heroSlides',
   stats: 'stats',
-  bannerImage: 'bannerImage',
-  marqueeText: 'marqueeText',
-  aboutSummary: 'aboutSummary',
-  featuredNoticesLimit: 'featuredNoticesLimit',
-  galleryPreviewLimit: 'galleryPreviewLimit',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type HomePageScalarFieldEnum = (typeof HomePageScalarFieldEnum)[keyof typeof HomePageScalarFieldEnum]
+
+
+export const DonationPageScalarFieldEnum = {
+  id: 'id',
+  pageTitle: 'pageTitle',
+  pageDescription: 'pageDescription',
+  bannerText: 'bannerText',
+  quranicVerse: 'quranicVerse',
+  categories: 'categories',
+  methods: 'methods',
+  contactForDonation: 'contactForDonation',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DonationPageScalarFieldEnum = (typeof DonationPageScalarFieldEnum)[keyof typeof DonationPageScalarFieldEnum]
+
+
+export const ContactPageScalarFieldEnum = {
+  id: 'id',
+  address: 'address',
+  city: 'city',
+  district: 'district',
+  phone: 'phone',
+  email: 'email',
+  officeHours: 'officeHours',
+  googleMapsUrl: 'googleMapsUrl',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ContactPageScalarFieldEnum = (typeof ContactPageScalarFieldEnum)[keyof typeof ContactPageScalarFieldEnum]
 
 
 export const DepartmentScalarFieldEnum = {
@@ -204,6 +236,46 @@ export const TeacherScalarFieldEnum = {
 } as const
 
 export type TeacherScalarFieldEnum = (typeof TeacherScalarFieldEnum)[keyof typeof TeacherScalarFieldEnum]
+
+
+export const QuestionScalarFieldEnum = {
+  id: 'id',
+  question: 'question',
+  category: 'category',
+  authorName: 'authorName',
+  status: 'status',
+  isResolved: 'isResolved',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type QuestionScalarFieldEnum = (typeof QuestionScalarFieldEnum)[keyof typeof QuestionScalarFieldEnum]
+
+
+export const AnswerScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  authorName: 'authorName',
+  authorRole: 'authorRole',
+  questionId: 'questionId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AnswerScalarFieldEnum = (typeof AnswerScalarFieldEnum)[keyof typeof AnswerScalarFieldEnum]
+
+
+export const ReplyScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  authorName: 'authorName',
+  authorRole: 'authorRole',
+  answerId: 'answerId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ReplyScalarFieldEnum = (typeof ReplyScalarFieldEnum)[keyof typeof ReplyScalarFieldEnum]
 
 
 export const SortOrder = {

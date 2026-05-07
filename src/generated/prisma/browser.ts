@@ -43,6 +43,16 @@ export type Notice = Prisma.NoticeModel
  */
 export type HomePage = Prisma.HomePageModel
 /**
+ * Model DonationPage
+ * 
+ */
+export type DonationPage = Prisma.DonationPageModel
+/**
+ * Model ContactPage
+ * 
+ */
+export type ContactPage = Prisma.ContactPageModel
+/**
  * Model Department
  * 
  */
@@ -57,3 +67,18 @@ export type SiteSettings = Prisma.SiteSettingsModel
  * 
  */
 export type Teacher = Prisma.TeacherModel
+/**
+ * Model Question
+ * 
+ */
+export type Question = Prisma.QuestionModel
+/**
+ * Model Answer
+ * 
+ */
+export type Answer = Prisma.AnswerModel
+/**
+ * Model Reply
+ * 
+ */
+export type Reply = Prisma.ReplyModel

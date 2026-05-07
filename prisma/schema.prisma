@@ -24,6 +24,17 @@ enum MediaType {
     VIDEO
 }
 
+enum QuestionStatus {
+    DRAFT
+    PUBLISHED
+}
+
+enum AuthorRole {
+    ADMIN
+    TEACHER
+    USER
+}
+
 // ================================
 // MODELS
 // ================================
@@ -106,6 +117,38 @@ model HomePage {
     @@map("home_pages")
 }
 
+model DonationPage {
+    id                 String @id @default(cuid())
+    pageTitle          String @default("মাদরাসায় দান করুন")
+    pageDescription    String @default("আপনার দান মাদরাসার উন্নয়নে সহায়তা করবে")
+    bannerText         String @default("মাদরাসায় দান করুন")
+    quranicVerse       Json   @default("{\"arabic\": \"\", \"bangla\": \"\", \"reference\": \"\"}")
+    categories         Json   @default("[]")
+    methods            Json   @default("[]")
+    contactForDonation Json   @default("{\"phone\": \"\", \"email\": \"\", \"note\": \"\"}")
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("donation_pages")
+}
+
+model ContactPage {
+    id            String   @id @default(cuid())
+    address       String
+    city          String
+    district      String
+    phone         String[] @default([])
+    email         String[] @default([])
+    officeHours   String
+    googleMapsUrl String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("contact_pages")
+}
+
 model Department {
     id            String   @id @default(cuid())
     name          String
@@ -157,4 +200,48 @@ model Teacher {
     updatedAt DateTime @updatedAt
 
     @@map("teachers")
+}
+
+model Question {
+    id         String         @id @default(cuid())
+    question   String         @db.Text
+    category   String
+    authorName String
+    status     QuestionStatus @default(DRAFT)
+    isResolved Boolean        @default(false)
+    answers    Answer[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("questions")
+}
+
+model Answer {
+    id         String     @id @default(cuid())
+    content    String     @db.Text
+    authorName String
+    authorRole AuthorRole @default(ADMIN)
+    question   Question   @relation(fields: [questionId], references: [id], onDelete: Cascade)
+    questionId String
+    replies    Reply[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("answers")
+}
+
+model Reply {
+    id         String     @id @default(cuid())
+    content    String     @db.Text
+    authorName String
+    authorRole AuthorRole @default(USER)
+    answer     Answer     @relation(fields: [answerId], references: [id], onDelete: Cascade)
+    answerId   String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("replies")
 }

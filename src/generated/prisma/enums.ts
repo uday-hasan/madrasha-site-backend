@@ -23,3 +23,20 @@ export const MediaType = {
 } as const
 
 export type MediaType = (typeof MediaType)[keyof typeof MediaType]
+
+
+export const QuestionStatus = {
+  DRAFT: 'DRAFT',
+  PUBLISHED: 'PUBLISHED'
+} as const
+
+export type QuestionStatus = (typeof QuestionStatus)[keyof typeof QuestionStatus]
+
+
+export const AuthorRole = {
+  ADMIN: 'ADMIN',
+  TEACHER: 'TEACHER',
+  USER: 'USER'
+} as const
+
+export type AuthorRole = (typeof AuthorRole)[keyof typeof AuthorRole]

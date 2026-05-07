@@ -3,7 +3,12 @@ import { authController } from './auth.controller';
 import { validateRequest } from '../../middlewares/validateRequest';
 import { authenticate } from '../../middlewares/authenticate';
 import { authLimiter } from '../../middlewares/rateLimiter';
-import { registerSchema, loginSchema, changePasswordSchema } from './auth.validation';
+import {
+  registerSchema,
+  loginSchema,
+  changePasswordSchema,
+  updateProfileSchema,
+} from './auth.validation';
 
 const router = Router();
 
@@ -158,5 +163,37 @@ router.patch(
  *         description: Not authenticated
  */
 router.get('/me', authenticate, authController.getMe);
+
+/**
+ * @swagger
+ * /auth/profile:
+ *   patch:
+ *     summary: Update user profile (name)
+ *     tags: [Auth]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [name]
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: John Doe
+ *     responses:
+ *       200:
+ *         description: Profile updated successfully
+ *       401:
+ *         description: Not authenticated
+ */
+router.patch(
+  '/profile',
+  authenticate,
+  validateRequest(updateProfileSchema),
+  authController.updateProfile,
+);
 
 export default router;

@@ -2,6 +2,7 @@ import 'dotenv/config';
 import bcrypt from 'bcryptjs';
 import { PrismaClient } from '../src/generated/prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
+import seedQA from './seed-qa';
 
 // ================================
 // DATABASE SEEDER
@@ -317,6 +318,9 @@ async function main() {
   } else {
     console.log(`ℹ️  ${settingsCount} site settings already exist`);
   }
+
+  // ---- Q&A ----
+  await seedQA(prisma);
 
   console.log('✅ Database seeding complete!');
 }

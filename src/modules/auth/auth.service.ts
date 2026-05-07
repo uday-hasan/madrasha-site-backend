@@ -1,18 +1,19 @@
-import bcrypt from "bcryptjs";
-import { prisma } from "../../config/database";
-import { AppError } from "../../utils/AppError";
+import bcrypt from 'bcryptjs';
+import { prisma } from '../../config/database';
+import { AppError } from '../../utils/AppError';
 import {
   createAccessToken,
   createRefreshToken,
   verifyRefreshToken,
   getExpiryDate,
-} from "../../utils/jwt";
-import { env } from "../../config/env";
+} from '../../utils/jwt';
+import { env } from '../../config/env';
 import type {
   RegisterInput,
   LoginInput,
   ChangePasswordInput,
-} from "./auth.validation";
+  UpdateProfileInput,
+} from './auth.validation';
 
 // ================================
 // AUTH SERVICE
@@ -29,7 +30,7 @@ export const authService = {
     // Check if email already exists
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
-      throw new AppError("An account with this email already exists", 409);
+      throw new AppError('An account with this email already exists', 409);
     }
 
     // Hash the password (cost factor 12 = good balance of security vs speed)
@@ -60,14 +61,11 @@ export const authService = {
     // Use same error message for "user not found" and "wrong password"
     // This prevents email enumeration attacks
     if (!user || !(await bcrypt.compare(password, user.password))) {
-      throw new AppError("Invalid email or password", 401);
+      throw new AppError('Invalid email or password', 401);
     }
 
     if (!user.isActive) {
-      throw new AppError(
-        "Your account has been deactivated. Please contact support.",
-        403,
-      );
+      throw new AppError('Your account has been deactivated. Please contact support.', 403);
     }
 
     // Generate tokens
@@ -106,17 +104,17 @@ export const authService = {
     });
 
     if (!storedToken) {
-      throw new AppError("Invalid refresh token. Please log in again.", 401);
+      throw new AppError('Invalid refresh token. Please log in again.', 401);
     }
 
     if (storedToken.expiresAt < new Date()) {
       // Token expired — delete it from DB
       await prisma.refreshToken.delete({ where: { token: refreshToken } });
-      throw new AppError("Refresh token expired. Please log in again.", 401);
+      throw new AppError('Refresh token expired. Please log in again.', 401);
     }
 
     if (!storedToken.user.isActive) {
-      throw new AppError("Your account has been deactivated.", 403);
+      throw new AppError('Your account has been deactivated.', 403);
     }
 
     // Rotate refresh token — delete old, create new (better security)
@@ -157,25 +155,19 @@ export const authService = {
 
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) {
-      throw new AppError("User not found", 404);
+      throw new AppError('User not found', 404);
     }
 
     // Verify current password
-    const isPasswordCorrect = await bcrypt.compare(
-      currentPassword,
-      user.password,
-    );
+    const isPasswordCorrect = await bcrypt.compare(currentPassword, user.password);
     if (!isPasswordCorrect) {
-      throw new AppError("Current password is incorrect", 400);
+      throw new AppError('Current password is incorrect', 400);
     }
 
     // Prevent using the same password
     const isSamePassword = await bcrypt.compare(newPassword, user.password);
     if (isSamePassword) {
-      throw new AppError(
-        "New password must be different from current password",
-        400,
-      );
+      throw new AppError('New password must be different from current password', 400);
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 12);
@@ -187,6 +179,42 @@ export const authService = {
 
     // Logout from all devices after password change (security best practice)
     await prisma.refreshToken.deleteMany({ where: { userId } });
+  },
+
+  // ---- UPDATE PROFILE ----
+  async updateProfile(userId: string, data: UpdateProfileInput) {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!user) {
+      throw new AppError('User not found', 404);
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        name: data.name,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    return updatedUser;
   },
 
   // ---- GET CURRENT USER ----
@@ -204,7 +232,7 @@ export const authService = {
     });
 
     if (!user) {
-      throw new AppError("User not found", 404);
+      throw new AppError('User not found', 404);
     }
 
     return user;

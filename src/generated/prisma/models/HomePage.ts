@@ -20,40 +20,18 @@ export type HomePageModel = runtime.Types.Result.DefaultSelection<Prisma.$HomePa
 
 export type AggregateHomePage = {
   _count: HomePageCountAggregateOutputType | null
-  _avg: HomePageAvgAggregateOutputType | null
-  _sum: HomePageSumAggregateOutputType | null
   _min: HomePageMinAggregateOutputType | null
   _max: HomePageMaxAggregateOutputType | null
 }
 
-export type HomePageAvgAggregateOutputType = {
-  featuredNoticesLimit: number | null
-  galleryPreviewLimit: number | null
-}
-
-export type HomePageSumAggregateOutputType = {
-  featuredNoticesLimit: number | null
-  galleryPreviewLimit: number | null
-}
-
 export type HomePageMinAggregateOutputType = {
   id: string | null
-  bannerImage: string | null
-  marqueeText: string | null
-  aboutSummary: string | null
-  featuredNoticesLimit: number | null
-  galleryPreviewLimit: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
 
 export type HomePageMaxAggregateOutputType = {
   id: string | null
-  bannerImage: string | null
-  marqueeText: string | null
-  aboutSummary: string | null
-  featuredNoticesLimit: number | null
-  galleryPreviewLimit: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -62,45 +40,20 @@ export type HomePageCountAggregateOutputType = {
   id: number
   heroSlides: number
   stats: number
-  bannerImage: number
-  marqueeText: number
-  aboutSummary: number
-  featuredNoticesLimit: number
-  galleryPreviewLimit: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
 
-export type HomePageAvgAggregateInputType = {
-  featuredNoticesLimit?: true
-  galleryPreviewLimit?: true
-}
-
-export type HomePageSumAggregateInputType = {
-  featuredNoticesLimit?: true
-  galleryPreviewLimit?: true
-}
-
 export type HomePageMinAggregateInputType = {
   id?: true
-  bannerImage?: true
-  marqueeText?: true
-  aboutSummary?: true
-  featuredNoticesLimit?: true
-  galleryPreviewLimit?: true
   createdAt?: true
   updatedAt?: true
 }
 
 export type HomePageMaxAggregateInputType = {
   id?: true
-  bannerImage?: true
-  marqueeText?: true
-  aboutSummary?: true
-  featuredNoticesLimit?: true
-  galleryPreviewLimit?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -109,11 +62,6 @@ export type HomePageCountAggregateInputType = {
   id?: true
   heroSlides?: true
   stats?: true
-  bannerImage?: true
-  marqueeText?: true
-  aboutSummary?: true
-  featuredNoticesLimit?: true
-  galleryPreviewLimit?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -157,18 +105,6 @@ export type HomePageAggregateArgs<ExtArgs extends runtime.Types.Extensions.Inter
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Select which fields to average
-  **/
-  _avg?: HomePageAvgAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
-   * Select which fields to sum
-  **/
-  _sum?: HomePageSumAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
    * Select which fields to find the minimum value
   **/
   _min?: HomePageMinAggregateInputType
@@ -199,8 +135,6 @@ export type HomePageGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   _count?: HomePageCountAggregateInputType | true
-  _avg?: HomePageAvgAggregateInputType
-  _sum?: HomePageSumAggregateInputType
   _min?: HomePageMinAggregateInputType
   _max?: HomePageMaxAggregateInputType
 }
@@ -209,16 +143,9 @@ export type HomePageGroupByOutputType = {
   id: string
   heroSlides: runtime.JsonValue
   stats: runtime.JsonValue
-  bannerImage: string | null
-  marqueeText: string | null
-  aboutSummary: string | null
-  featuredNoticesLimit: number
-  galleryPreviewLimit: number
   createdAt: Date
   updatedAt: Date
   _count: HomePageCountAggregateOutputType | null
-  _avg: HomePageAvgAggregateOutputType | null
-  _sum: HomePageSumAggregateOutputType | null
   _min: HomePageMinAggregateOutputType | null
   _max: HomePageMaxAggregateOutputType | null
 }
@@ -245,11 +172,6 @@ export type HomePageWhereInput = {
   id?: Prisma.StringFilter<"HomePage"> | string
   heroSlides?: Prisma.JsonFilter<"HomePage">
   stats?: Prisma.JsonFilter<"HomePage">
-  bannerImage?: Prisma.StringNullableFilter<"HomePage"> | string | null
-  marqueeText?: Prisma.StringNullableFilter<"HomePage"> | string | null
-  aboutSummary?: Prisma.StringNullableFilter<"HomePage"> | string | null
-  featuredNoticesLimit?: Prisma.IntFilter<"HomePage"> | number
-  galleryPreviewLimit?: Prisma.IntFilter<"HomePage"> | number
   createdAt?: Prisma.DateTimeFilter<"HomePage"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"HomePage"> | Date | string
 }
@@ -258,11 +180,6 @@ export type HomePageOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   heroSlides?: Prisma.SortOrder
   stats?: Prisma.SortOrder
-  bannerImage?: Prisma.SortOrderInput | Prisma.SortOrder
-  marqueeText?: Prisma.SortOrderInput | Prisma.SortOrder
-  aboutSummary?: Prisma.SortOrderInput | Prisma.SortOrder
-  featuredNoticesLimit?: Prisma.SortOrder
-  galleryPreviewLimit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -274,11 +191,6 @@ export type HomePageWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.HomePageWhereInput | Prisma.HomePageWhereInput[]
   heroSlides?: Prisma.JsonFilter<"HomePage">
   stats?: Prisma.JsonFilter<"HomePage">
-  bannerImage?: Prisma.StringNullableFilter<"HomePage"> | string | null
-  marqueeText?: Prisma.StringNullableFilter<"HomePage"> | string | null
-  aboutSummary?: Prisma.StringNullableFilter<"HomePage"> | string | null
-  featuredNoticesLimit?: Prisma.IntFilter<"HomePage"> | number
-  galleryPreviewLimit?: Prisma.IntFilter<"HomePage"> | number
   createdAt?: Prisma.DateTimeFilter<"HomePage"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"HomePage"> | Date | string
 }, "id">
@@ -287,18 +199,11 @@ export type HomePageOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   heroSlides?: Prisma.SortOrder
   stats?: Prisma.SortOrder
-  bannerImage?: Prisma.SortOrderInput | Prisma.SortOrder
-  marqueeText?: Prisma.SortOrderInput | Prisma.SortOrder
-  aboutSummary?: Prisma.SortOrderInput | Prisma.SortOrder
-  featuredNoticesLimit?: Prisma.SortOrder
-  galleryPreviewLimit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.HomePageCountOrderByAggregateInput
-  _avg?: Prisma.HomePageAvgOrderByAggregateInput
   _max?: Prisma.HomePageMaxOrderByAggregateInput
   _min?: Prisma.HomePageMinOrderByAggregateInput
-  _sum?: Prisma.HomePageSumOrderByAggregateInput
 }
 
 export type HomePageScalarWhereWithAggregatesInput = {
@@ -308,11 +213,6 @@ export type HomePageScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"HomePage"> | string
   heroSlides?: Prisma.JsonWithAggregatesFilter<"HomePage">
   stats?: Prisma.JsonWithAggregatesFilter<"HomePage">
-  bannerImage?: Prisma.StringNullableWithAggregatesFilter<"HomePage"> | string | null
-  marqueeText?: Prisma.StringNullableWithAggregatesFilter<"HomePage"> | string | null
-  aboutSummary?: Prisma.StringNullableWithAggregatesFilter<"HomePage"> | string | null
-  featuredNoticesLimit?: Prisma.IntWithAggregatesFilter<"HomePage"> | number
-  galleryPreviewLimit?: Prisma.IntWithAggregatesFilter<"HomePage"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"HomePage"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"HomePage"> | Date | string
 }
@@ -321,11 +221,6 @@ export type HomePageCreateInput = {
   id?: string
   heroSlides?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stats?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  bannerImage?: string | null
-  marqueeText?: string | null
-  aboutSummary?: string | null
-  featuredNoticesLimit?: number
-  galleryPreviewLimit?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -334,11 +229,6 @@ export type HomePageUncheckedCreateInput = {
   id?: string
   heroSlides?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stats?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  bannerImage?: string | null
-  marqueeText?: string | null
-  aboutSummary?: string | null
-  featuredNoticesLimit?: number
-  galleryPreviewLimit?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -347,11 +237,6 @@ export type HomePageUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   heroSlides?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stats?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  marqueeText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aboutSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  featuredNoticesLimit?: Prisma.IntFieldUpdateOperationsInput | number
-  galleryPreviewLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -360,11 +245,6 @@ export type HomePageUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   heroSlides?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stats?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  marqueeText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aboutSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  featuredNoticesLimit?: Prisma.IntFieldUpdateOperationsInput | number
-  galleryPreviewLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -373,11 +253,6 @@ export type HomePageCreateManyInput = {
   id?: string
   heroSlides?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stats?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  bannerImage?: string | null
-  marqueeText?: string | null
-  aboutSummary?: string | null
-  featuredNoticesLimit?: number
-  galleryPreviewLimit?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -386,11 +261,6 @@ export type HomePageUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   heroSlides?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stats?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  marqueeText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aboutSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  featuredNoticesLimit?: Prisma.IntFieldUpdateOperationsInput | number
-  galleryPreviewLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -399,11 +269,6 @@ export type HomePageUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   heroSlides?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stats?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  marqueeText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aboutSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  featuredNoticesLimit?: Prisma.IntFieldUpdateOperationsInput | number
-  galleryPreviewLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -412,53 +277,20 @@ export type HomePageCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   heroSlides?: Prisma.SortOrder
   stats?: Prisma.SortOrder
-  bannerImage?: Prisma.SortOrder
-  marqueeText?: Prisma.SortOrder
-  aboutSummary?: Prisma.SortOrder
-  featuredNoticesLimit?: Prisma.SortOrder
-  galleryPreviewLimit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
-export type HomePageAvgOrderByAggregateInput = {
-  featuredNoticesLimit?: Prisma.SortOrder
-  galleryPreviewLimit?: Prisma.SortOrder
-}
-
 export type HomePageMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  bannerImage?: Prisma.SortOrder
-  marqueeText?: Prisma.SortOrder
-  aboutSummary?: Prisma.SortOrder
-  featuredNoticesLimit?: Prisma.SortOrder
-  galleryPreviewLimit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type HomePageMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  bannerImage?: Prisma.SortOrder
-  marqueeText?: Prisma.SortOrder
-  aboutSummary?: Prisma.SortOrder
-  featuredNoticesLimit?: Prisma.SortOrder
-  galleryPreviewLimit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-}
-
-export type HomePageSumOrderByAggregateInput = {
-  featuredNoticesLimit?: Prisma.SortOrder
-  galleryPreviewLimit?: Prisma.SortOrder
-}
-
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
 }
 
 
@@ -467,11 +299,6 @@ export type HomePageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   id?: boolean
   heroSlides?: boolean
   stats?: boolean
-  bannerImage?: boolean
-  marqueeText?: boolean
-  aboutSummary?: boolean
-  featuredNoticesLimit?: boolean
-  galleryPreviewLimit?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["homePage"]>
@@ -480,11 +307,6 @@ export type HomePageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   id?: boolean
   heroSlides?: boolean
   stats?: boolean
-  bannerImage?: boolean
-  marqueeText?: boolean
-  aboutSummary?: boolean
-  featuredNoticesLimit?: boolean
-  galleryPreviewLimit?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["homePage"]>
@@ -493,11 +315,6 @@ export type HomePageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   id?: boolean
   heroSlides?: boolean
   stats?: boolean
-  bannerImage?: boolean
-  marqueeText?: boolean
-  aboutSummary?: boolean
-  featuredNoticesLimit?: boolean
-  galleryPreviewLimit?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["homePage"]>
@@ -506,16 +323,11 @@ export type HomePageSelectScalar = {
   id?: boolean
   heroSlides?: boolean
   stats?: boolean
-  bannerImage?: boolean
-  marqueeText?: boolean
-  aboutSummary?: boolean
-  featuredNoticesLimit?: boolean
-  galleryPreviewLimit?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type HomePageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "heroSlides" | "stats" | "bannerImage" | "marqueeText" | "aboutSummary" | "featuredNoticesLimit" | "galleryPreviewLimit" | "createdAt" | "updatedAt", ExtArgs["result"]["homePage"]>
+export type HomePageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "heroSlides" | "stats" | "createdAt" | "updatedAt", ExtArgs["result"]["homePage"]>
 
 export type $HomePagePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "HomePage"
@@ -524,11 +336,6 @@ export type $HomePagePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     id: string
     heroSlides: runtime.JsonValue
     stats: runtime.JsonValue
-    bannerImage: string | null
-    marqueeText: string | null
-    aboutSummary: string | null
-    featuredNoticesLimit: number
-    galleryPreviewLimit: number
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["homePage"]>
@@ -957,11 +764,6 @@ export interface HomePageFieldRefs {
   readonly id: Prisma.FieldRef<"HomePage", 'String'>
   readonly heroSlides: Prisma.FieldRef<"HomePage", 'Json'>
   readonly stats: Prisma.FieldRef<"HomePage", 'Json'>
-  readonly bannerImage: Prisma.FieldRef<"HomePage", 'String'>
-  readonly marqueeText: Prisma.FieldRef<"HomePage", 'String'>
-  readonly aboutSummary: Prisma.FieldRef<"HomePage", 'String'>
-  readonly featuredNoticesLimit: Prisma.FieldRef<"HomePage", 'Int'>
-  readonly galleryPreviewLimit: Prisma.FieldRef<"HomePage", 'Int'>
   readonly createdAt: Prisma.FieldRef<"HomePage", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"HomePage", 'DateTime'>
 }

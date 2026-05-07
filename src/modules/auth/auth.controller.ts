@@ -1,17 +1,14 @@
-import { Request, Response } from "express";
-import { authService } from "./auth.service";
-import { catchAsync } from "../../utils/catchAsync";
-import { sendResponse } from "../../utils/sendResponse";
-import {
-  setAccessTokenCookie,
-  setRefreshTokenCookie,
-  clearAuthCookies,
-} from "../../utils/cookie";
+import { Request, Response } from 'express';
+import { authService } from './auth.service';
+import { catchAsync } from '../../utils/catchAsync';
+import { sendResponse } from '../../utils/sendResponse';
+import { setAccessTokenCookie, setRefreshTokenCookie, clearAuthCookies } from '../../utils/cookie';
 import type {
   RegisterInput,
   LoginInput,
   ChangePasswordInput,
-} from "./auth.validation";
+  UpdateProfileInput,
+} from './auth.validation';
 
 // ================================
 // AUTH CONTROLLER
@@ -31,16 +28,14 @@ export const authController = {
 
     sendResponse(res, {
       statusCode: 201,
-      message: "Account created successfully",
+      message: 'Account created successfully',
       data: user,
     });
   }),
 
   // POST /auth/login
   login: catchAsync(async (req: Request, res: Response): Promise<void> => {
-    const { user, accessToken, refreshToken } = await authService.login(
-      req.body as LoginInput,
-    );
+    const { user, accessToken, refreshToken } = await authService.login(req.body as LoginInput);
 
     // Set tokens as HttpOnly cookies
     setAccessTokenCookie(res, accessToken);
@@ -48,7 +43,7 @@ export const authController = {
 
     sendResponse(res, {
       statusCode: 200,
-      message: "Logged in successfully",
+      message: 'Logged in successfully',
       data: user,
     });
   }),
@@ -58,9 +53,7 @@ export const authController = {
     const refreshToken = req.cookies?.refreshToken as string | undefined;
 
     if (!refreshToken) {
-      res
-        .status(401)
-        .json({ success: false, message: "No refresh token provided" });
+      res.status(401).json({ success: false, message: 'No refresh token provided' });
       return;
     }
 
@@ -73,7 +66,7 @@ export const authController = {
 
     sendResponse(res, {
       statusCode: 200,
-      message: "Tokens refreshed successfully",
+      message: 'Tokens refreshed successfully',
     });
   }),
 
@@ -88,7 +81,7 @@ export const authController = {
 
     sendResponse(res, {
       statusCode: 200,
-      message: "Logged out successfully",
+      message: 'Logged out successfully',
     });
   }),
 
@@ -100,26 +93,21 @@ export const authController = {
 
     sendResponse(res, {
       statusCode: 200,
-      message: "Logged out from all devices successfully",
+      message: 'Logged out from all devices successfully',
     });
   }),
 
   // PATCH /auth/change-password
-  changePassword: catchAsync(
-    async (req: Request, res: Response): Promise<void> => {
-      await authService.changePassword(
-        req.user!.userId,
-        req.body as ChangePasswordInput,
-      );
+  changePassword: catchAsync(async (req: Request, res: Response): Promise<void> => {
+    await authService.changePassword(req.user!.userId, req.body as ChangePasswordInput);
 
-      clearAuthCookies(res);
+    clearAuthCookies(res);
 
-      sendResponse(res, {
-        statusCode: 200,
-        message: "Password changed successfully. Please log in again.",
-      });
-    },
-  ),
+    sendResponse(res, {
+      statusCode: 200,
+      message: 'Password changed successfully. Please log in again.',
+    });
+  }),
 
   // GET /auth/me
   getMe: catchAsync(async (req: Request, res: Response): Promise<void> => {
@@ -127,7 +115,18 @@ export const authController = {
 
     sendResponse(res, {
       statusCode: 200,
-      message: "User fetched successfully",
+      message: 'User fetched successfully',
+      data: user,
+    });
+  }),
+
+  // PATCH /auth/profile
+  updateProfile: catchAsync(async (req: Request, res: Response): Promise<void> => {
+    const user = await authService.updateProfile(req.user!.userId, req.body as UpdateProfileInput);
+
+    sendResponse(res, {
+      statusCode: 200,
+      message: 'Profile updated successfully',
       data: user,
     });
   }),

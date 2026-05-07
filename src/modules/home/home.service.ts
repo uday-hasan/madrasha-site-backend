@@ -122,6 +122,26 @@ export const homeService = {
     });
 
     if (existing) {
+      const oldSlides = (existing.heroSlides as any[]) || [];
+      const newSlides = data.heroSlides || [];
+
+      // Delete images for slides that were removed or had their images replaced
+      oldSlides.forEach((oldSlide) => {
+        const newSlide = newSlides.find((s) => s.id === oldSlide.id);
+
+        // If slide is deleted, delete its image
+        if (!newSlide && oldSlide.imageUrl) {
+          const oldPath = urlToFilePath(oldSlide.imageUrl);
+          if (oldPath) deleteFile(oldPath);
+        }
+
+        // If slide exists but image was replaced, delete the old image
+        if (newSlide && oldSlide.imageUrl && newSlide.imageUrl !== oldSlide.imageUrl) {
+          const oldPath = urlToFilePath(oldSlide.imageUrl);
+          if (oldPath) deleteFile(oldPath);
+        }
+      });
+
       return prisma.homePage.update({
         where: { id: existing.id },
         data: {
@@ -224,14 +244,16 @@ export const homeService = {
     if (!homePage) return;
 
     const heroSlides = (homePage.heroSlides as any[]) || [];
-    const slideToDelete = heroSlides.find((s) => s.id === slideId);
+    // Convert slideId to number since frontend uses Date.now() for IDs
+    const slideIdAsNumber = Number(slideId);
+    const slideToDelete = heroSlides.find((s) => s.id === slideIdAsNumber);
 
     if (slideToDelete?.imageUrl) {
       const path = urlToFilePath(slideToDelete.imageUrl);
       if (path) deleteFile(path);
     }
 
-    const updatedSlides = heroSlides.filter((s) => s.id !== slideId);
+    const updatedSlides = heroSlides.filter((s) => s.id !== slideIdAsNumber);
     return await prisma.homePage.update({
       where: { id: homePage.id },
       data: { heroSlides: updatedSlides },

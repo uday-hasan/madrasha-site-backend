@@ -104,11 +104,12 @@ export const homeController = {
     });
   }),
   deleteSlide: catchAsync(async (req: Request, res: Response): Promise<void> => {
-    const data = await homeService.deleteSlide(req.body);
+    const slideId = req.params.id as string;
+    const data = await homeService.deleteSlide(slideId);
 
     sendResponse(res, {
       statusCode: 200,
-      message: 'হোম পেজ সফলভাবে আপডেট হয়েছে',
+      message: 'স্লাইড সফলভাবে মুছে ফেলা হয়েছে',
       data,
     });
   }),
