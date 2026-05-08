@@ -6,7 +6,7 @@ import { z } from 'zod';
 
 const heroSlideSchema = z.object({
   id: z.union([z.string(), z.number()]).optional(),
-  title: z.string().min(1).max(200).trim().optional(),
+  title: z.string().max(200).trim().optional(),
   subtitle: z.string().max(200).trim().optional(),
   description: z.string().max(1000).trim().optional(),
   imageUrl: z.string().min(1).trim(),
