@@ -27,7 +27,11 @@ export const createNoticeSchema = {
 
     isImportant: z.boolean().default(false),
 
-    attachmentUrl: z.string().url('Invalid attachment URL').optional(),
+    // attachmentUrl: z.string().url('Invalid attachment URL').optional(),
+    attachmentUrl: z.preprocess(
+      (val) => (val === '' ? undefined : val),
+      z.string().url('Invalid attachment URL').optional(),
+    ),
 
     slug: z.string().min(2).max(300).trim().optional(),
   }),
@@ -49,7 +53,11 @@ export const updateNoticeSchema = {
 
     isImportant: z.boolean().optional(),
 
-    attachmentUrl: z.string().url('Invalid attachment URL').optional(),
+    // attachmentUrl: z.string().url('Invalid attachment URL').optional(),
+    attachmentUrl: z.preprocess(
+      (val) => (val === '' ? undefined : val),
+      z.string().url('Invalid attachment URL').optional(),
+    ),
 
     slug: z.string().min(2).max(300).trim().optional(),
   }),
