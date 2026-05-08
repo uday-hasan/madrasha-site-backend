@@ -6,7 +6,7 @@ export const teacherService = {
   getAllActive: async () => {
     return prisma.teacher.findMany({
       where: { isActive: true },
-      orderBy: { displayOrder: 'asc' },
+      orderBy: { displayOrder: 'desc' },
     });
   },
 
