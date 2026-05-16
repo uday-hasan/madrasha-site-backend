@@ -2,6 +2,7 @@
 import { prisma } from '../../config/database';
 import { AppError } from '../../utils/AppError';
 import { deleteFile, getFullUrl, urlToFilePath } from '../../utils/fileUpload';
+import { slugify } from '../../utils/helpers';
 
 export const aboutService = {
   // ============ ABOUT SECTIONS ============
@@ -30,23 +31,26 @@ export const aboutService = {
 
   createAboutSection: async (data: {
     title: string;
-    slug: string;
+    slug?: string;
     description: string;
     displayOrder?: number;
     isActive?: boolean;
   }) => {
-    // Check if slug already exists
-    const existing = await prisma.aboutSection.findUnique({
-      where: { slug: data.slug },
-    });
-    if (existing) {
-      throw new AppError('এই স্লাগ ইতিমধ্যে ব্যবহার করা হয়েছে', 400);
+    // Auto-generate slug from title if not provided
+    let slug = data.slug || slugify(data.title);
+
+    // Check if slug already exists and make it unique
+    let counter = 1;
+    let baseSlug = slug;
+    while (await prisma.aboutSection.findUnique({ where: { slug } })) {
+      slug = `${baseSlug}-${counter}`;
+      counter++;
     }
 
     return prisma.aboutSection.create({
       data: {
         title: data.title,
-        slug: data.slug,
+        slug,
         description: data.description,
         displayOrder: data.displayOrder ?? 0,
         isActive: data.isActive ?? true,
@@ -58,29 +62,41 @@ export const aboutService = {
     id: string,
     data: Partial<{
       title: string;
-      slug: string;
+      slug?: string;
       description: string;
       displayOrder: number;
       isActive: boolean;
     }>,
   ) => {
-    await prisma.aboutSection.findUnique({
+    const existing = await prisma.aboutSection.findUnique({
       where: { id },
     });
 
-    // If slug is being changed, check for duplicates
-    if (data.slug) {
-      const existing = await prisma.aboutSection.findUnique({
-        where: { slug: data.slug },
-      });
-      if (existing && existing.id !== id) {
-        throw new AppError('এই স্লাগ ইতিমধ্যে ব্যবহার করা হয়েছে', 400);
+    if (!existing) {
+      throw new AppError('সেকশন পাওয়া যায়নি', 404);
+    }
+
+    // Auto-generate slug from title if title is being changed and slug is not provided
+    let updateData = { ...data };
+    if (data.title && !data.slug) {
+      let newSlug = slugify(data.title);
+      let counter = 1;
+      let baseSlug = newSlug;
+      // Check for duplicates, but exclude current id
+      while (true) {
+        const foundSlug = await prisma.aboutSection.findUnique({
+          where: { slug: newSlug },
+        });
+        if (!foundSlug || foundSlug.id === id) break;
+        newSlug = `${baseSlug}-${counter}`;
+        counter++;
       }
+      updateData.slug = newSlug;
     }
 
     return prisma.aboutSection.update({
       where: { id },
-      data,
+      data: updateData,
     });
   },
 
