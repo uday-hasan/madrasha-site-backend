@@ -246,7 +246,8 @@ export const aboutService = {
     // Detect base URL from request if available
     let baseUrl: string | undefined = undefined;
     if (req) {
-      const protocol = req.protocol || 'http';
+      // const protocol = req.protocol || 'http';
+      const protocol = req.get('x-forwarded-proto') || req.protocol;
       const host = req.get('host') || 'localhost:5000';
       baseUrl = `${protocol}://${host}`;
     }
