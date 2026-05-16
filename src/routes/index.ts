@@ -10,6 +10,7 @@ import { teacherRoutes } from '../modules/teacher/teacher.routes';
 import { qaRoutes } from '../modules/qa/qa.routes';
 import { donationRouter } from '../modules/donation/donation.routes';
 import { contactRouter } from '../modules/contact/contact.routes';
+import { aboutRoutes } from '../modules/about/about.routes';
 
 // ================================
 // MAIN ROUTER
@@ -30,5 +31,6 @@ router.use('/teachers', teacherRoutes);
 router.use('/qa', qaRoutes);
 router.use('/donation', donationRouter);
 router.use('/contact', contactRouter);
+router.use('/about', aboutRoutes);
 
 export default router;

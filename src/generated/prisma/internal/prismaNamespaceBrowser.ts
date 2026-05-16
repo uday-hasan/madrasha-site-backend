@@ -63,7 +63,13 @@ export const ModelName = {
   Teacher: 'Teacher',
   Question: 'Question',
   Answer: 'Answer',
-  Reply: 'Reply'
+  Reply: 'Reply',
+  AboutSection: 'AboutSection',
+  AboutValue: 'AboutValue',
+  Achievement: 'Achievement',
+  ProposedBuilding: 'ProposedBuilding',
+  Leadership: 'Leadership',
+  AboutQuote: 'AboutQuote'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -276,6 +282,95 @@ export const ReplyScalarFieldEnum = {
 } as const
 
 export type ReplyScalarFieldEnum = (typeof ReplyScalarFieldEnum)[keyof typeof ReplyScalarFieldEnum]
+
+
+export const AboutSectionScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  description: 'description',
+  displayOrder: 'displayOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AboutSectionScalarFieldEnum = (typeof AboutSectionScalarFieldEnum)[keyof typeof AboutSectionScalarFieldEnum]
+
+
+export const AboutValueScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  icon: 'icon',
+  displayOrder: 'displayOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AboutValueScalarFieldEnum = (typeof AboutValueScalarFieldEnum)[keyof typeof AboutValueScalarFieldEnum]
+
+
+export const AchievementScalarFieldEnum = {
+  id: 'id',
+  year: 'year',
+  title: 'title',
+  description: 'description',
+  displayOrder: 'displayOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AchievementScalarFieldEnum = (typeof AchievementScalarFieldEnum)[keyof typeof AchievementScalarFieldEnum]
+
+
+export const ProposedBuildingScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  imageUrl: 'imageUrl',
+  status: 'status',
+  estimatedCost: 'estimatedCost',
+  description: 'description',
+  displayOrder: 'displayOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProposedBuildingScalarFieldEnum = (typeof ProposedBuildingScalarFieldEnum)[keyof typeof ProposedBuildingScalarFieldEnum]
+
+
+export const LeadershipScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  designation: 'designation',
+  photoUrl: 'photoUrl',
+  bio: 'bio',
+  email: 'email',
+  phone: 'phone',
+  displayOrder: 'displayOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LeadershipScalarFieldEnum = (typeof LeadershipScalarFieldEnum)[keyof typeof LeadershipScalarFieldEnum]
+
+
+export const AboutQuoteScalarFieldEnum = {
+  id: 'id',
+  quote: 'quote',
+  author: 'author',
+  authorRole: 'authorRole',
+  displayOrder: 'displayOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AboutQuoteScalarFieldEnum = (typeof AboutQuoteScalarFieldEnum)[keyof typeof AboutQuoteScalarFieldEnum]
 
 
 export const SortOrder = {

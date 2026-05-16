@@ -245,3 +245,96 @@ model Reply {
 
     @@map("replies")
 }
+
+// ================================
+// ABOUT PAGE MODELS
+// ================================
+
+model AboutSection {
+    id           String  @id @default(cuid())
+    title        String // e.g., আবেদন, আমাদের লক্ষ্য ও উদ্দেশ্য, অবতরণিকা
+    slug         String  @unique
+    description  String  @db.Text
+    displayOrder Int     @default(0)
+    isActive     Boolean @default(true)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("about_sections")
+}
+
+model AboutValue {
+    id           String  @id @default(cuid())
+    title        String // e.g., ইলম, আমল, আখলাক
+    description  String  @db.Text // shown in modal
+    icon         String? // emoji or icon identifier
+    displayOrder Int     @default(0)
+    isActive     Boolean @default(true)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("about_values")
+}
+
+model Achievement {
+    id           String  @id @default(cuid())
+    year         String
+    title        String
+    description  String  @db.Text
+    displayOrder Int     @default(0)
+    isActive     Boolean @default(true)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("achievements")
+}
+
+model ProposedBuilding {
+    id            String  @id @default(cuid())
+    title         String
+    imageUrl      String?
+    status        String  @default("Planning") // Planning, Under Construction, Completed
+    estimatedCost String?
+    description   String? @db.Text
+    displayOrder  Int     @default(0)
+    isActive      Boolean @default(true)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("proposed_buildings")
+}
+
+model Leadership {
+    id           String  @id @default(cuid())
+    name         String
+    designation  String
+    photoUrl     String?
+    bio          String? @db.Text
+    email        String?
+    phone        String?
+    displayOrder Int     @default(0)
+    isActive     Boolean @default(true)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("leadership")
+}
+
+model AboutQuote {
+    id           String  @id @default(cuid())
+    quote        String  @db.Text
+    author       String
+    authorRole   String  @default("Founder") // Founder, Teacher, etc.
+    displayOrder Int     @default(0)
+    isActive     Boolean @default(true)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("about_quotes")
+}

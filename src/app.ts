@@ -10,7 +10,7 @@ import swaggerUi from 'swagger-ui-express';
 import { env, isDevelopment } from './config/env';
 import { logger } from './config/logger';
 import { swaggerSpec } from './config/swagger';
-import { apiLimiter } from './middlewares/rateLimiter';
+// import { apiLimiter } from './middlewares/rateLimiter';
 import { errorHandler, notFoundHandler } from './middlewares/errorHandler';
 import router from './routes';
 
@@ -63,7 +63,7 @@ app.use(
 );
 
 // Rate limiting — applied to all API routes
-app.use(`/api/${env.API_VERSION}`, apiLimiter);
+// app.use(`/api/${env.API_VERSION}`, apiLimiter);
 
 // ================================
 // GENERAL MIDDLEWARES

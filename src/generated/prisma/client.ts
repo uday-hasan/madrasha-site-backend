@@ -104,3 +104,33 @@ export type Answer = Prisma.AnswerModel
  * 
  */
 export type Reply = Prisma.ReplyModel
+/**
+ * Model AboutSection
+ * 
+ */
+export type AboutSection = Prisma.AboutSectionModel
+/**
+ * Model AboutValue
+ * 
+ */
+export type AboutValue = Prisma.AboutValueModel
+/**
+ * Model Achievement
+ * 
+ */
+export type Achievement = Prisma.AchievementModel
+/**
+ * Model ProposedBuilding
+ * 
+ */
+export type ProposedBuilding = Prisma.ProposedBuildingModel
+/**
+ * Model Leadership
+ * 
+ */
+export type Leadership = Prisma.LeadershipModel
+/**
+ * Model AboutQuote
+ * 
+ */
+export type AboutQuote = Prisma.AboutQuoteModel
