@@ -162,6 +162,9 @@ model Department {
     isActive      Boolean  @default(true)
     displayOrder  Int      @default(0)
 
+    // Admission requirements for this department
+    admissionRequirements AdmissionRequirement[]
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
@@ -337,4 +340,67 @@ model AboutQuote {
     updatedAt DateTime @updatedAt
 
     @@map("about_quotes")
+}
+
+// ================================
+// ADMISSION PAGE MODELS
+// ================================
+
+model AdmissionSettings {
+    id               String  @id @default(cuid())
+    isOpen           Boolean @default(true)
+    session          String  @default("২০২৫-২০২৬") // e.g., "২০২৫-२०२६"
+    startDate        String  @default("২০২৫ সালের ১ জানুয়ারি")
+    endDate          String  @default("२०२५ সালের ३१ মার্চ")
+    officeHoursStart String  @default("সকাল ৮টা")
+    officeHoursEnd   String  @default("বিকেল ৪টা")
+    officeHoursDays  String  @default("শনি - বৃহস্পতি")
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("admission_settings")
+}
+
+model AdmissionProcess {
+    id           String  @id @default(cuid())
+    step         String  @db.Text // Each step of the admission process
+    displayOrder Int     @default(0)
+    isActive     Boolean @default(true)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("admission_processes")
+}
+
+model AdmissionRequirement {
+    id                   String     @id @default(cuid())
+    departmentId         String
+    department           Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+    minimumAge           String // e.g., "৪-৭ বছর"
+    minimumQualification String     @db.Text // e.g., "কোনো পূর্ব যোগ্যতার প্রয়োজন নেই"
+    documents            String[]   @default([]) // e.g., ["জন্মনিবন্ধন সনদ", "পাসপোর্ট সাইজ ছবি ২ কপি"]
+    fees                 String // e.g., "মাসিক ৫০০ টাকা"
+    seats                Int        @default(0)
+    displayOrder         Int        @default(0)
+    isActive             Boolean    @default(true)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("admission_requirements")
+}
+
+model AdmissionImportantDate {
+    id           String  @id @default(cuid())
+    event        String // e.g., "ভর্তি ফরম বিতরণ শুরু"
+    date         String // e.g., "১ জানুয়ারি २०२५"
+    displayOrder Int     @default(0)
+    isActive     Boolean @default(true)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("admission_important_dates")
 }

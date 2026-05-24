@@ -112,3 +112,23 @@ export type Leadership = Prisma.LeadershipModel
  * 
  */
 export type AboutQuote = Prisma.AboutQuoteModel
+/**
+ * Model AdmissionSettings
+ * 
+ */
+export type AdmissionSettings = Prisma.AdmissionSettingsModel
+/**
+ * Model AdmissionProcess
+ * 
+ */
+export type AdmissionProcess = Prisma.AdmissionProcessModel
+/**
+ * Model AdmissionRequirement
+ * 
+ */
+export type AdmissionRequirement = Prisma.AdmissionRequirementModel
+/**
+ * Model AdmissionImportantDate
+ * 
+ */
+export type AdmissionImportantDate = Prisma.AdmissionImportantDateModel

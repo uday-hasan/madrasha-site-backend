@@ -69,7 +69,11 @@ export const ModelName = {
   Achievement: 'Achievement',
   ProposedBuilding: 'ProposedBuilding',
   Leadership: 'Leadership',
-  AboutQuote: 'AboutQuote'
+  AboutQuote: 'AboutQuote',
+  AdmissionSettings: 'AdmissionSettings',
+  AdmissionProcess: 'AdmissionProcess',
+  AdmissionRequirement: 'AdmissionRequirement',
+  AdmissionImportantDate: 'AdmissionImportantDate'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -371,6 +375,64 @@ export const AboutQuoteScalarFieldEnum = {
 } as const
 
 export type AboutQuoteScalarFieldEnum = (typeof AboutQuoteScalarFieldEnum)[keyof typeof AboutQuoteScalarFieldEnum]
+
+
+export const AdmissionSettingsScalarFieldEnum = {
+  id: 'id',
+  isOpen: 'isOpen',
+  session: 'session',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  officeHoursStart: 'officeHoursStart',
+  officeHoursEnd: 'officeHoursEnd',
+  officeHoursDays: 'officeHoursDays',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdmissionSettingsScalarFieldEnum = (typeof AdmissionSettingsScalarFieldEnum)[keyof typeof AdmissionSettingsScalarFieldEnum]
+
+
+export const AdmissionProcessScalarFieldEnum = {
+  id: 'id',
+  step: 'step',
+  displayOrder: 'displayOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdmissionProcessScalarFieldEnum = (typeof AdmissionProcessScalarFieldEnum)[keyof typeof AdmissionProcessScalarFieldEnum]
+
+
+export const AdmissionRequirementScalarFieldEnum = {
+  id: 'id',
+  departmentId: 'departmentId',
+  minimumAge: 'minimumAge',
+  minimumQualification: 'minimumQualification',
+  documents: 'documents',
+  fees: 'fees',
+  seats: 'seats',
+  displayOrder: 'displayOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdmissionRequirementScalarFieldEnum = (typeof AdmissionRequirementScalarFieldEnum)[keyof typeof AdmissionRequirementScalarFieldEnum]
+
+
+export const AdmissionImportantDateScalarFieldEnum = {
+  id: 'id',
+  event: 'event',
+  date: 'date',
+  displayOrder: 'displayOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdmissionImportantDateScalarFieldEnum = (typeof AdmissionImportantDateScalarFieldEnum)[keyof typeof AdmissionImportantDateScalarFieldEnum]
 
 
 export const SortOrder = {
