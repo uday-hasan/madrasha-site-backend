@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { prisma } from '../../config/database';
 import { AppError } from '../../utils/AppError';
 
@@ -289,7 +288,7 @@ export const admissionService = {
       },
       processes: processes.map((p) => p.step),
       requirements: requirements.map((r) => ({
-        department: r.department.name,
+        department: { name: r.department.name },
         minimumAge: r.minimumAge,
         minimumQualification: r.minimumQualification,
         documents: r.documents,
