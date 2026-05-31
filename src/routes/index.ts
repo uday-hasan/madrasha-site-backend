@@ -12,6 +12,7 @@ import { donationRouter } from '../modules/donation/donation.routes';
 import { contactRouter } from '../modules/contact/contact.routes';
 import { aboutRoutes } from '../modules/about/about.routes';
 import admissionRoutes from '../modules/admission/admission.routes';
+import { applicationRoutes } from '../modules/application/application.routes';
 
 // ================================
 // MAIN ROUTER
@@ -34,5 +35,6 @@ router.use('/donation', donationRouter);
 router.use('/contact', contactRouter);
 router.use('/about', aboutRoutes);
 router.use('/admission', admissionRoutes);
+router.use('/applications', applicationRoutes);
 
 export default router;

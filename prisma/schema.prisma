@@ -35,6 +35,23 @@ enum AuthorRole {
     USER
 }
 
+enum ApplicationStatus {
+    PENDING
+    APPROVED
+    REJECTED
+}
+
+enum PaymentMethod {
+    ONLINE
+    CASH
+}
+
+enum PaymentStatus {
+    PENDING
+    COMPLETED
+    FAILED
+}
+
 // ================================
 // MODELS
 // ================================
@@ -164,6 +181,9 @@ model Department {
 
     // Admission requirements for this department
     admissionRequirements AdmissionRequirement[]
+
+    // Student applications for this department
+    studentApplications StudentApplication[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -403,4 +423,56 @@ model AdmissionImportantDate {
     updatedAt DateTime @updatedAt
 
     @@map("admission_important_dates")
+}
+
+// ================================
+// STUDENT APPLICATION MODELS
+// ================================
+
+model StudentApplication {
+    id               String     @id @default(cuid())
+    studentName      String
+    studentEmail     String
+    studentPhone     String
+    fatherName       String
+    fatherPhone      String
+    dateOfBirth      String
+    presentAddress   String
+    permanentAddress String
+    departmentId     String
+    department       Department @relation(fields: [departmentId], references: [id], onDelete: Restrict)
+
+    // Application details
+    status        ApplicationStatus @default(PENDING)
+    paymentMethod PaymentMethod
+    notes         String?           @db.Text
+
+    // Relations
+    payments ApplicationPayment[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("student_applications")
+}
+
+model ApplicationPayment {
+    id            String             @id @default(cuid())
+    applicationId String
+    application   StudentApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+    // Payment details
+    amount        Float
+    paymentMethod PaymentMethod
+    status        PaymentStatus @default(PENDING)
+    transactionId String?       @unique
+
+    // For online payments (will be populated later)
+    paymentGateway String? // e.g., "stripe", "bkash", "nagad"
+    metadata       Json? // Additional payment data
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("application_payments")
 }

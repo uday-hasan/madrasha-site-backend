@@ -73,7 +73,9 @@ export const ModelName = {
   AdmissionSettings: 'AdmissionSettings',
   AdmissionProcess: 'AdmissionProcess',
   AdmissionRequirement: 'AdmissionRequirement',
-  AdmissionImportantDate: 'AdmissionImportantDate'
+  AdmissionImportantDate: 'AdmissionImportantDate',
+  StudentApplication: 'StudentApplication',
+  ApplicationPayment: 'ApplicationPayment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -435,6 +437,43 @@ export const AdmissionImportantDateScalarFieldEnum = {
 export type AdmissionImportantDateScalarFieldEnum = (typeof AdmissionImportantDateScalarFieldEnum)[keyof typeof AdmissionImportantDateScalarFieldEnum]
 
 
+export const StudentApplicationScalarFieldEnum = {
+  id: 'id',
+  studentName: 'studentName',
+  studentEmail: 'studentEmail',
+  studentPhone: 'studentPhone',
+  fatherName: 'fatherName',
+  fatherPhone: 'fatherPhone',
+  dateOfBirth: 'dateOfBirth',
+  presentAddress: 'presentAddress',
+  permanentAddress: 'permanentAddress',
+  departmentId: 'departmentId',
+  status: 'status',
+  paymentMethod: 'paymentMethod',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StudentApplicationScalarFieldEnum = (typeof StudentApplicationScalarFieldEnum)[keyof typeof StudentApplicationScalarFieldEnum]
+
+
+export const ApplicationPaymentScalarFieldEnum = {
+  id: 'id',
+  applicationId: 'applicationId',
+  amount: 'amount',
+  paymentMethod: 'paymentMethod',
+  status: 'status',
+  transactionId: 'transactionId',
+  paymentGateway: 'paymentGateway',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ApplicationPaymentScalarFieldEnum = (typeof ApplicationPaymentScalarFieldEnum)[keyof typeof ApplicationPaymentScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -448,6 +487,14 @@ export const JsonNullValueInput = {
 } as const
 
 export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {

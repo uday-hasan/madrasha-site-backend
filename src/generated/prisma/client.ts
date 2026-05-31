@@ -154,3 +154,13 @@ export type AdmissionRequirement = Prisma.AdmissionRequirementModel
  * 
  */
 export type AdmissionImportantDate = Prisma.AdmissionImportantDateModel
+/**
+ * Model StudentApplication
+ * 
+ */
+export type StudentApplication = Prisma.StudentApplicationModel
+/**
+ * Model ApplicationPayment
+ * 
+ */
+export type ApplicationPayment = Prisma.ApplicationPaymentModel
