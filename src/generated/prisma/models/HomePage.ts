@@ -40,6 +40,7 @@ export type HomePageCountAggregateOutputType = {
   id: number
   heroSlides: number
   stats: number
+  aboutSummary: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -62,6 +63,7 @@ export type HomePageCountAggregateInputType = {
   id?: true
   heroSlides?: true
   stats?: true
+  aboutSummary?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -143,6 +145,7 @@ export type HomePageGroupByOutputType = {
   id: string
   heroSlides: runtime.JsonValue
   stats: runtime.JsonValue
+  aboutSummary: runtime.JsonValue
   createdAt: Date
   updatedAt: Date
   _count: HomePageCountAggregateOutputType | null
@@ -172,6 +175,7 @@ export type HomePageWhereInput = {
   id?: Prisma.StringFilter<"HomePage"> | string
   heroSlides?: Prisma.JsonFilter<"HomePage">
   stats?: Prisma.JsonFilter<"HomePage">
+  aboutSummary?: Prisma.JsonFilter<"HomePage">
   createdAt?: Prisma.DateTimeFilter<"HomePage"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"HomePage"> | Date | string
 }
@@ -180,6 +184,7 @@ export type HomePageOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   heroSlides?: Prisma.SortOrder
   stats?: Prisma.SortOrder
+  aboutSummary?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -191,6 +196,7 @@ export type HomePageWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.HomePageWhereInput | Prisma.HomePageWhereInput[]
   heroSlides?: Prisma.JsonFilter<"HomePage">
   stats?: Prisma.JsonFilter<"HomePage">
+  aboutSummary?: Prisma.JsonFilter<"HomePage">
   createdAt?: Prisma.DateTimeFilter<"HomePage"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"HomePage"> | Date | string
 }, "id">
@@ -199,6 +205,7 @@ export type HomePageOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   heroSlides?: Prisma.SortOrder
   stats?: Prisma.SortOrder
+  aboutSummary?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.HomePageCountOrderByAggregateInput
@@ -213,6 +220,7 @@ export type HomePageScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"HomePage"> | string
   heroSlides?: Prisma.JsonWithAggregatesFilter<"HomePage">
   stats?: Prisma.JsonWithAggregatesFilter<"HomePage">
+  aboutSummary?: Prisma.JsonWithAggregatesFilter<"HomePage">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"HomePage"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"HomePage"> | Date | string
 }
@@ -221,6 +229,7 @@ export type HomePageCreateInput = {
   id?: string
   heroSlides?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stats?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  aboutSummary?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -229,6 +238,7 @@ export type HomePageUncheckedCreateInput = {
   id?: string
   heroSlides?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stats?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  aboutSummary?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -237,6 +247,7 @@ export type HomePageUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   heroSlides?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stats?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  aboutSummary?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -245,6 +256,7 @@ export type HomePageUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   heroSlides?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stats?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  aboutSummary?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -253,6 +265,7 @@ export type HomePageCreateManyInput = {
   id?: string
   heroSlides?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stats?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  aboutSummary?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -261,6 +274,7 @@ export type HomePageUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   heroSlides?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stats?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  aboutSummary?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -269,6 +283,7 @@ export type HomePageUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   heroSlides?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stats?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  aboutSummary?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -277,6 +292,7 @@ export type HomePageCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   heroSlides?: Prisma.SortOrder
   stats?: Prisma.SortOrder
+  aboutSummary?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -299,6 +315,7 @@ export type HomePageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   id?: boolean
   heroSlides?: boolean
   stats?: boolean
+  aboutSummary?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["homePage"]>
@@ -307,6 +324,7 @@ export type HomePageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   id?: boolean
   heroSlides?: boolean
   stats?: boolean
+  aboutSummary?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["homePage"]>
@@ -315,6 +333,7 @@ export type HomePageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   id?: boolean
   heroSlides?: boolean
   stats?: boolean
+  aboutSummary?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["homePage"]>
@@ -323,11 +342,12 @@ export type HomePageSelectScalar = {
   id?: boolean
   heroSlides?: boolean
   stats?: boolean
+  aboutSummary?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type HomePageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "heroSlides" | "stats" | "createdAt" | "updatedAt", ExtArgs["result"]["homePage"]>
+export type HomePageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "heroSlides" | "stats" | "aboutSummary" | "createdAt" | "updatedAt", ExtArgs["result"]["homePage"]>
 
 export type $HomePagePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "HomePage"
@@ -336,6 +356,7 @@ export type $HomePagePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     id: string
     heroSlides: runtime.JsonValue
     stats: runtime.JsonValue
+    aboutSummary: runtime.JsonValue
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["homePage"]>
@@ -764,6 +785,7 @@ export interface HomePageFieldRefs {
   readonly id: Prisma.FieldRef<"HomePage", 'String'>
   readonly heroSlides: Prisma.FieldRef<"HomePage", 'Json'>
   readonly stats: Prisma.FieldRef<"HomePage", 'Json'>
+  readonly aboutSummary: Prisma.FieldRef<"HomePage", 'Json'>
   readonly createdAt: Prisma.FieldRef<"HomePage", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"HomePage", 'DateTime'>
 }

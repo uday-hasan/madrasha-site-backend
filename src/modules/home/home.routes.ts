@@ -145,6 +145,39 @@ router.put(
 
 /**
  * @swagger
+ * /home/about-summary:
+ *   put:
+ *     summary: Update about summary (Admin only)
+ *     tags: [Home]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               aboutSummary:
+ *                 type: object
+ *     responses:
+ *       200:
+ *         description: About summary updated
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ */
+router.put(
+  '/about-summary',
+  authenticate,
+  authorize(Role.ADMIN),
+  validateRequest(updateHomeSchema),
+  homeController.updateAboutSummary,
+);
+
+/**
+ * @swagger
  * /home/slide:
  *   put:
  *     summary: Create or update a hero slide (Admin only)

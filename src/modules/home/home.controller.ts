@@ -72,6 +72,17 @@ export const homeController = {
     });
   }),
 
+  // PUT /home/about-summary
+  updateAboutSummary: catchAsync(async (req: Request, res: Response): Promise<void> => {
+    const data = await homeService.updateAboutSummary(req.body);
+
+    sendResponse(res, {
+      statusCode: 200,
+      message: 'আমাদের সম্পর্কে সফলভাবে আপডেট হয়েছে',
+      data: { aboutSummary: data.aboutSummary },
+    });
+  }),
+
   // GET /home/slides
   getSlides: catchAsync(async (_req: Request, res: Response): Promise<void> => {
     const data = await homeService.getSlides();

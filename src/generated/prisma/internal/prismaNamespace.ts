@@ -2381,6 +2381,7 @@ export const HomePageScalarFieldEnum = {
   id: 'id',
   heroSlides: 'heroSlides',
   stats: 'stats',
+  aboutSummary: 'aboutSummary',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

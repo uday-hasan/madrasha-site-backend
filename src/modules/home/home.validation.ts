@@ -22,10 +22,24 @@ const statSchema = z.object({
   icon: z.string().max(50).trim().optional(),
 });
 
+const aboutValueSchema = z.object({
+  icon: z.string().trim().optional(),
+  title: z.string().trim().min(1),
+  desc: z.string().trim().min(1),
+});
+
+const aboutSummarySchema = z.object({
+  title: z.string().trim().min(1),
+  text1: z.string().trim().optional(),
+  text2: z.string().trim().optional(),
+  values: z.array(aboutValueSchema).optional(),
+});
+
 export const updateHomeSchema = {
   body: z.object({
     heroSlides: z.array(heroSlideSchema).optional(),
     stats: z.array(statSchema).optional(),
+    aboutSummary: aboutSummarySchema.optional(),
   }),
 };
 

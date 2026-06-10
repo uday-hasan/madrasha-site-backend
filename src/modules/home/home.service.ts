@@ -89,6 +89,7 @@ export const homeService = {
       featuredNotices,
       latestGallery,
       activeDepartments,
+      aboutSummary: homePage.aboutSummary,
     };
   },
 
@@ -195,6 +196,30 @@ export const homeService = {
       data: {
         heroSlides: [],
         stats: data.stats ?? [],
+      },
+    });
+  },
+
+  // ---- UPDATE ABOUT SUMMARY (Admin only) ----
+  async updateAboutSummary(data: UpdateHomeInput) {
+    const existing = await prisma.homePage.findFirst({
+      orderBy: { createdAt: 'desc' },
+    });
+
+    if (existing) {
+      return prisma.homePage.update({
+        where: { id: existing.id },
+        data: {
+          ...(data.aboutSummary !== undefined && { aboutSummary: data.aboutSummary }),
+        },
+      });
+    }
+
+    return prisma.homePage.create({
+      data: {
+        heroSlides: [],
+        stats: [],
+        aboutSummary: data.aboutSummary ?? {},
       },
     });
   },

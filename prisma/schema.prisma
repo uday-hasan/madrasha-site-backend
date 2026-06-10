@@ -124,9 +124,10 @@ model Notice {
 }
 
 model HomePage {
-    id         String @id @default(cuid())
-    heroSlides Json   @default("[]")
-    stats      Json   @default("[]")
+    id           String @id @default(cuid())
+    heroSlides   Json   @default("[]")
+    stats        Json   @default("[]")
+    aboutSummary Json   @default("{}")
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
